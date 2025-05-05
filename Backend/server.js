@@ -1,12 +1,13 @@
+// server.js
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const connectDB = require('./config/db');
-const dotenv = require('dotenv');
 
 // Load environment variables
-dotenv.config();
+require('dotenv').config();
 
-// Connect to MongoDB
+// Connect to database
 connectDB();
 
 const app = express();
@@ -15,16 +16,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/games', require('./routes/gameRoutes'));
-app.use('/api/cart', require('./routes/cartRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
+// Serve static files from the 'public' directory
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
-// Handle root route
-app.get('/', (req, res) => {
-  res.send('Game Tribe API is running...');
-});
+// Routes
+app.use('/api/games', require('./routes/gameRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

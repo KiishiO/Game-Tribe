@@ -151,3 +151,43 @@ const seedDatabase = async () => {
 // Run function to seed database
 // Usage: node seedData.js
 seedDatabase();
+
+// // utils/seedData.js
+// const mongoose = require('mongoose');
+// const Game = require('../models/Game');
+// const connectDB = require('../config/db');
+// require('dotenv').config();
+
+// // Initial game data
+// const gameData = [
+//   {
+//     name: 'Haunted',
+//     description: 'Step into a chilling nightmare as a little girl, trapped in a mysterious haunted mansion...',
+//     price: 29.99,
+//     image: 'Haunted.jpg',
+//     genres: ['Horror', 'Strategy'],
+//     featured: true
+//   },
+//   // Add more games...
+// ];
+
+// // Connect and seed data
+// const importData = async () => {
+//   try {
+//     await connectDB();
+    
+//     // Clear existing data
+//     await Game.deleteMany();
+    
+//     // Insert new data
+//     await Game.insertMany(gameData);
+    
+//     console.log('Data imported successfully');
+//     process.exit();
+//   } catch (error) {
+//     console.error(`Error: ${error.message}`);
+//     process.exit(1);
+//   }
+// };
+
+// importData();

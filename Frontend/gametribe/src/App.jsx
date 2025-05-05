@@ -1,6 +1,6 @@
 // src/App.jsx - Complete App component with all routes
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthContext, AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { RecentlyViewedProvider } from './context/RecentlyViewedContext';
 import { useContext } from 'react';
