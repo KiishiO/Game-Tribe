@@ -1,0 +1,47 @@
+
+.order-details-container {
+  background-color: var(--bg-secondary);
+  border-radius: 10px;
+  box-shadow: var(--shadow-elevation);
+  overflow: hidden;
+  padding: 20px;
+}
+
+.order-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.order-title h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.order-title p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.order-status {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-badge i {
+  margin-right: 8px;
+}
