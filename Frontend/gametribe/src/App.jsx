@@ -1,43 +1,9 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App
-
+// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
-import { RecentlyViewedProvider } from './context/RecentlyViewedContext';
+import { RecentlyViewedProvider } from '../context/RecentlyViewedContext';
+import RequireAuth from './components/RequireAuth';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
@@ -47,6 +13,7 @@ import TeamPage from './pages/TeamPage';
 import FuturePage from './pages/FuturePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -55,15 +22,31 @@ function App() {
         <RecentlyViewedProvider>
           <Router>
             <Routes>
+              {/* Auth routes outside of main layout */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              
+              {/* Main layout with sidebar */}
               <Route path="/" element={<Layout />}>
                 <Route index element={<HomePage />} />
                 <Route path="search" element={<SearchPage />} />
                 <Route path="cart" element={<CartPage />} />
-                <Route path="profile" element={<ProfilePage />} />
+                
+                {/* Protected route for profile */}
+                <Route 
+                  path="profile" 
+                  element={
+                    <RequireAuth>
+                      <ProfilePage />
+                    </RequireAuth>
+                  } 
+                />
+                
                 <Route path="team" element={<TeamPage />} />
                 <Route path="future" element={<FuturePage />} />
+                
+                {/* 404 page for unmatched routes */}
+                <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>
           </Router>

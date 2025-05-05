@@ -1,0 +1,338 @@
+/* ProfilePage.css - Styles for the user profile page */
+
+:root {
+    /* Using the existing variables from your current CSS */
+    /* Reminder: Variables should match your existing global variables */
+  }
+  
+  .profile-container {
+    background-color: var(--bg-secondary);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-elevation);
+    margin: 20px auto;
+    max-width: 1000px;
+  }
+  
+  .profile-header {
+    position: relative;
+    background: var(--accent-color);
+    height: 200px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .profile-avatar {
+    position: absolute;
+    bottom: -100px;
+    left: 20px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid var(--bg-secondary);
+    object-fit: cover;
+    box-shadow: var(--shadow-elevation);
+  }
+  
+  .profile-info {
+    padding: 120px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .profile-name {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-family: "Handjet", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .edit-profile-btn {
+    background-color: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .edit-profile-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-sidebar);
+    border-color: var(--accent-color);
+  }
+  
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+  
+  .tab.active {
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--accent-color);
+  }
+  
+  .profile-details {
+    padding: 20px;
+  }
+  
+  .detail-section {
+    margin-bottom: 1.5rem;
+    background-color: rgba(10, 17, 35, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .detail-section:hover {
+    background-color: rgba(10, 17, 35, 0.5);
+  }
+  
+  .detail-section h3 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .detail-section p {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  #displayArea {
+    cursor: pointer;
+    min-height: 30px;
+    color: var(--text-primary);
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  #displayArea:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  #myTextbox {
+    padding: 10px;
+    width: 100%;
+    background-color: rgba(10, 17, 35, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  #myTextbox:focus {
+    outline: none;
+    border-color: var(--accent-color);
+  }
+  
+  .coming-soon {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 100px 0;
+    font-size: 1.2rem;
+  }
+  
+  /* Profile Editor Popup */
+  .edit-profile-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .edit-profile-modal {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-hover);
+    width: 90%;
+    max-width: 500px;
+    padding: 30px;
+    animation: slideUp 0.4s ease;
+  }
+  
+  .edit-profile-modal h2 {
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 24px;
+  }
+  
+  .profile-image-selection {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+  }
+  
+  .profile-image-option {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .profile-image-option:hover {
+    border-color: var(--accent-color);
+    transform: scale(1.05);
+  }
+  
+  .profile-image-option.selected {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(159, 134, 192, 0.7);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(10, 17, 35, 0.5);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+  }
+  
+  .popup-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+  }
+  
+  .popup-actions button {
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+  }
+  
+  .btn-cancel {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+  }
+  
+  .btn-save {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+  }
+  
+  .btn-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .btn-save:hover {
+    background-color: var(--accent-color-alt);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  /* Responsive Adjustments */
+  @media screen and (max-width: 768px) {
+    .profile-avatar {
+      width: 150px;
+      height: 150px;
+      bottom: -75px;
+    }
+    
+    .profile-info {
+      padding: 90px 15px 15px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .profile-name {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    
+    .profile-actions {
+      width: 100%;
+      justify-content: flex-start;
+      margin-top: 10px;
+    }
+    
+    .edit-profile-modal {
+      width: 95%;
+      padding: 20px;
+    }
+    
+    .tabs {
+      flex-direction: row;
+    }
+    
+    .tab {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
