@@ -1,8 +1,6 @@
 // SearchPage.jsx - Game catalog and search page
 import { useState, useEffect } from 'react';
 import { gameService } from '../services/gameService';
-import GameCard from '../components/GameCard';
-import GameDetails from '../components/GameDetails';
 import '../assets/styles/SearchPage.css';
 
 const SearchPage = () => {

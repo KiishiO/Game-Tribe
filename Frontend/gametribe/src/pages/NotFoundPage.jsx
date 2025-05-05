@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import '../styles/TeamPage.css';
+import '../assets/styles/TeamPage.css';
 
 const NotFoundPage = () => {
   return (

@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
-import { RecentlyViewedProvider } from '../context/RecentlyViewedContext';
+import { RecentlyViewedProvider } from './context/RecentlyViewedContext';
 import RequireAuth from './components/RequireAuth';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
@@ -10,7 +10,6 @@ import SearchPage from './pages/SearchPage';
 import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
 import TeamPage from './pages/TeamPage';
-import FuturePage from './pages/FuturePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -43,7 +42,6 @@ function App() {
                 />
                 
                 <Route path="team" element={<TeamPage />} />
-                <Route path="future" element={<FuturePage />} />
                 
                 {/* 404 page for unmatched routes */}
                 <Route path="*" element={<NotFoundPage />} />

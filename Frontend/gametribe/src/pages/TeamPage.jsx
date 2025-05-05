@@ -1,7 +1,7 @@
 // TeamPage.jsx - Team information page
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/TeamPage.css';
+import '../assets/styles/TeamPage.css';
 
 const TeamPage = () => {
   const [teamData, setTeamData] = useState({

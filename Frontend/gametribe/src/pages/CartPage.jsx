@@ -5,7 +5,8 @@ import { CartContext } from '../context/CartContext';
 import { RecentlyViewedContext } from '../context/RecentlyViewedContext';
 import CheckoutModal from '../components/CheckoutModal';
 import OrderConfirmationModal from '../components/OrderConfirmationModal';
-import '../assets/styles/CartPage.css';
+// import '../assets/styles/CartPage.css';
+import '../assets/styles/SearchPage.css';
 
 const CartPage = () => {
   const { cartItems, updateQuantity, removeItem, clearCart, getCartTotals } = useContext(CartContext);

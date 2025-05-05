@@ -1,6 +1,6 @@
 // ProfilePage.jsx - User profile page
 import { useState, useEffect } from 'react';
-import '../styles/ProfilePage.css';
+import '../assets/styles/ProfilePage.css';
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
