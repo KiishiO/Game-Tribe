@@ -1,43 +1,59 @@
-// src/services/api.js - Base API configuration
-import axios from 'axios';
+// src/services/gameService.js - Game API service
+import api from './api';
 
-const API_URL = 'http://localhost:5000/api';
-
-// Create axios instance with default config
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add a request interceptor to attach the JWT token to requests
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+export const gameService = {
+  // Get all games with optional filters
+  getGames: async (filters = {}) => {
+    try {
+      const response = await api.get('/games', { params: filters });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching games:', error);
+      throw error;
     }
-    return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
-// Add a response interceptor to handle errors
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Handle 401 Unauthorized errors (token expired or invalid)
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // Redirect to login page if needed
-      window.location.href = '/login';
+  // Get a single game by ID
+  getGameById: async (id) => {
+    try {
+      const response = await api.get(`/games/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching game with id ${id}:`, error);
+      throw error;
     }
-    return Promise.reject(error);
-  }
-);
+  },
 
-export default api;
+  // Create a new game (admin only)
+  createGame: async (gameData) => {
+    try {
+      const response = await api.post('/games', gameData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating game:', error);
+      throw error;
+    }
+  },
+
+  // Update a game (admin only)
+  updateGame: async (id, gameData) => {
+    try {
+      const response = await api.put(`/games/${id}`, gameData);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating game with id ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Delete a game (admin only)
+  deleteGame: async (id) => {
+    try {
+      const response = await api.delete(`/games/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting game with id ${id}:`, error);
+      throw error;
+    }
+  }
+};
