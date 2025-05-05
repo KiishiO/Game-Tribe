@@ -44,7 +44,7 @@ const GameCard = ({ game }) => {
       <div className="game-card" onClick={handleViewDetails}>
         <div className="card-image-container">
           <img 
-            src={`/assets/images/${game.image}`} 
+            src={`../assets/images/${game.image}`} 
             alt={game.name} 
             className="card-image" 
           />
