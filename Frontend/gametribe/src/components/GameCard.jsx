@@ -1,7 +1,7 @@
 // GameCard.jsx - Reusable game card component
 import { useState, useContext } from 'react';
 import { CartContext } from '../context/CartContext';
-import { RecentlyViewedContext } from '../context/RecentlyViewedContext';
+import { RecentlyViewedContext } from '../context/RecentlyViewedContext.jsx';
 import GameDetails from './GameDetails';
 import '../assets/styles/GameCard.css';
 

@@ -1,68 +1,112 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Primary Background Colors */
+  --bg-primary: #5e548e;      /* Main purple background */
+  --bg-secondary: #231942;    /* Darker purple for content areas */
+  --bg-sidebar: #0A1123;      /* Very dark blue/purple for sidebar */
+  
+  /* Text Colors */
+  --text-primary: #e1e1e1;    /* Light gray/white for main text */
+  --text-secondary: #979494;  /* Slightly darker gray for secondary text */
+  
+  /* Accent Colors */
+  --accent-color: #9f86c0;    /* Lighter purple for accents */
+  --accent-color-alt: #8387c3; /* Alternative accent (blueish purple) */
+  
+  /* Border and Shadow */
+  --border-color: #282828;    /* Dark color for borders */
+  --shadow-sidebar: 0 2px 15px rgba(94, 84, 142, 0.3);
+  --shadow-elevation: 0 4px 6px rgba(94, 84, 142, 0.2),
+                      0 1px 3px rgba(94, 84, 142, 0.1);
+  --shadow-hover: 0 10px 20px rgba(94, 84, 142, 0.25),
+                  0 4px 8px rgba(94, 84, 142, 0.15);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+img {
+  max-width: 100%;
+}
+
+/* Global loading indicator */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  color: var(--text-secondary);
+  font-size: 18px;
+}
+
+.loading:after {
+  content: "...";
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: "."; }
+  40% { content: ".."; }
+  60% { content: "..."; }
+  80%, 100% { content: ""; }
+}
+
+/* Global error message */
+.error-message {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: #ff6b6b;
+  padding: 15px;
+  border-radius: 6px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* NotFoundPage.css */
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.not-found-container h1 {
+  font-size: 120px;
+  color: var(--accent-color);
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.not-found-container h2 {
+  font-size: 32px;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.not-found-container p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  max-width: 500px;
 }
