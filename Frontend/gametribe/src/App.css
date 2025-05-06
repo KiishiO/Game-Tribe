@@ -1,42 +1,88 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* App-wide styles */
+:root {
+  /* Light gray background */
+  --bg-primary: #5e548e; 
+  /* White for content areas */
+  --bg-secondary: #231942; 
+  /* Sidebar background */
+  --bg-sidebar: #0A1123; 
+  --text-primary: #e1e1e1;    
+  --text-secondary: #979494; 
+  --accent-color: #9f86c0;
+  --accent-color-alt: #8387c3;
+  --border-color: #282828; 
+  --shadow-sidebar: 0 2px 15px rgba(94, 84, 142, 0.3);
+  --shadow-elevation: 0 4px 6px rgba(94, 84, 142, 0.2),
+                      0 1px 3px rgba(94, 84, 142, 0.1);
+  --shadow-hover: 0 10px 20px rgba(94, 84, 142, 0.25),
+                  0 4px 8px rgba(94, 84, 142, 0.15);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+* {
+  box-sizing: border-box;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Make sure content fits properly with sidebar */
+.sidebar + div {
+  width: calc(100% - 80px);
+  margin-left: 80px;
+}
+
+/* Placeholder for other pages - remove when implementing them */
+.placeholder-page {
+  margin-left: 80px; /* Width of sidebar */
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 2rem;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  width: calc(100% - 80px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .placeholder-page {
+    font-size: 1.5rem;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+@media (max-width: 576px) {
+  .placeholder-page {
+    font-size: 1.2rem;
+    padding: 10px;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  
+  .sidebar {
+    width: 60px;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  
+  .placeholder-page,
+  .sidebar + div {
+    width: calc(100% - 60px);
+    margin-left: 60px;
+  }
 }

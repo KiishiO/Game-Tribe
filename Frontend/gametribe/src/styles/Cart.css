@@ -1,0 +1,429 @@
+:root {
+  /* Light gray background */
+  --bg-primary: #5e548e; 
+  /* White for content areas */
+  --bg-secondary: #231942; 
+   /* Sidebar background */
+  --bg-sidebar: #0A1123; 
+  --text-primary: #e1e1e1;    
+  --text-secondary: #979494; 
+  --accent-color: #9f86c0;
+  --accent-color-alt: #8387c3;
+  --border-color: #282828; 
+  --shadow-sidebar: 0 2px 15px rgba(94, 84, 142, 0.3);
+  --shadow-elevation: 0 4px 6px rgba(94, 84, 142, 0.2),
+                      0 1px 3px rgba(94, 84, 142, 0.1);
+  --shadow-hover: 0 10px 20px rgba(94, 84, 142, 0.25),
+                  0 4px 8px rgba(94, 84, 142, 0.15);
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  width: 100%;
+  padding-left: 80px; /* Same as sidebar width */
+  box-sizing: border-box;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  background-color: var(--bg-primary);
+  box-sizing: border-box;
+}
+
+.bungee-shade-regular {
+  font-family: "Bungee Shade", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 6rem; /* Responsive font size */
+  text-align: center;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* Content Wrapper with Elevation */
+.content-wrapper {
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-elevation);
+  margin: 20px 0;
+  padding: 30px;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Cart Page Specific Styles */
+.cart-container {
+  padding: 20px;
+}
+
+.card-title {
+  font-weight: 500;
+  color: #333;
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.table td {
+  vertical-align: middle;
+  color: var(--text-primary);
+}
+
+/* Improve input group appearance */
+.input-group-sm .form-control {
+  font-weight: 500;
+}
+
+/* Style for empty cart state */
+#empty-cart .fas {
+  color: #ddd;
+}
+
+/* Recently viewed items */
+.recently-viewed .card-img-top {
+  height: 160px;
+  object-fit: cover;
+}
+
+/* Card styles for cart page */
+.card {
+  background-color: #f8f9fa;
+  border: none;
+  border-radius: 10px;
+  box-shadow: var(--shadow-elevation);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.card .card-body {
+  padding: 1.25rem;
+}
+
+.card .card-title {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: #5e548e;
+  border-color: #5e548e;
+}
+
+.btn-primary:hover {
+  background-color: #9f86c0;
+  color: #0A1123;
+  border-color: #9f86c0;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Checkout modal improvements */
+.modal-body h5 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+/* Confirmation animation */
+@keyframes confirmCheck {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.fa-check-circle {
+  animation: confirmCheck 0.5s ease-out;
+}
+
+/* Show Bootstrap modals using React */
+.modal.show {
+  display: block;
+}
+
+/* Quantity input styling */
+.input-group-sm {
+  height: 30px;
+}
+
+.input-group-sm input {
+  text-align: center;
+  border-color: var(--accent-color);
+}
+
+.input-group-sm button {
+  border-color: var(--accent-color);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+}
+
+.input-group-sm button:hover {
+  background-color: var(--accent-color);
+  color: var(--bg-sidebar);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .bungee-shade-regular {
+      font-size: 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .bungee-shade-regular {
+      font-size: 3rem;
+  }
+  
+  .main-content {
+      padding: 15px;
+  }
+  
+  .content-wrapper {
+      padding: 15px;
+  }
+  
+  .modal-dialog {
+      margin: 0.5rem;
+      max-width: calc(100% - 1rem);
+  }
+  
+  .card-body {
+      padding: 1rem;
+  }
+}
+
+/* Order confirmation styles */
+.order-details-container {
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(10, 17, 35, 0.3);
+  margin-top: 20px;
+}
+
+.order-header {
+  margin-bottom: 20px;
+}
+
+.order-header h5 {
+  color: var(--accent-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.order-header p {
+  margin-bottom: 5px;
+  color: var(--text-primary);
+}
+
+.order-header strong {
+  font-weight: 600;
+}
+
+.order-link {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.order-link:hover {
+  color: var(--accent-color-alt);
+  text-decoration: underline;
+}
+
+/* Modal animations */
+@keyframes confirmCheck {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.fa-check-circle {
+  animation: confirmCheck 0.5s ease-out;
+  color: #4CAF50;
+}
+
+/* Table styling */
+.table {
+  color: var(--text-primary);
+}
+
+.table thead th {
+  border-top: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 12px 8px;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 10px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table tfoot td {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 500;
+}
+
+/* Checkout modal input styles */
+.modal-body .form-control {
+  background-color: var(--bg-sidebar);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.modal-body .form-control:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(159, 134, 192, 0.3);
+}
+
+.modal-body .form-label {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.modal-body .form-check-input {
+  background-color: var(--bg-sidebar);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-body .form-check-input:checked {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.modal-body .form-check-label {
+  color: var(--text-primary);
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--bg-sidebar);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-color-alt);
+  border-color: var(--accent-color-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background-color: var(--bg-sidebar);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-primary);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .modal-dialog.modal-lg {
+      max-width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-header .row {
+      flex-direction: column;
+  }
+  
+  .order-header .col-md-6:last-child {
+      margin-top: 15px;
+  }
+  
+  .modal-grid {
+      grid-template-columns: 1fr;
+  }
+  
+  .modal-footer {
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .modal-footer button {
+      width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .order-details-container {
+      padding: 10px;
+  }
+  
+  .table th, 
+  .table td {
+      padding: 8px 5px;
+      font-size: 0.85rem;
+  }
+  
+  .modal-body h5 {
+      font-size: 1rem;
+  }
+  
+  .modal-body {
+      padding: 15px 10px;
+  }
+  
+  .modal-content {
+      width: 95%;
+  }
+}
+
+@media (max-width: 576px) {
+  .bungee-shade-regular {
+      font-size: 2rem;
+  }
+  
+  .main-content {
+      padding: 10px;
+  }
+  
+  .cart-container {
+      padding: 10px;
+  }
+  
+  .table th, .table td {
+      padding: 0.5rem;
+  }
+  
+  .input-group-sm {
+      width: 80px !important;
+  }
+}

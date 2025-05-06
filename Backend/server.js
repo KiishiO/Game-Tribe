@@ -1,14 +1,9 @@
-// server.js
 const express = require('express');
-const path = require('path');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const connectDB = require('./config/db');
-
-// Load environment variables
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
-// Connect to database
-connectDB();
 
 const app = express();
 
@@ -16,23 +11,52 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from the 'public' directory
-app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
+// MongoDB Connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/gameTribeDB';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
-// Routes
-app.use('/api/games', require('./routes/gameRoutes'));
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
-app.use('/api/cart', require('./routes/cartRoutes'));
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Server Error');
+// Import Models
+const User = require('./models/User');
+const Game = require('./models/Game');
+const Order = require('./models/Order');
+
+// Import Routes
+const authRoutes = require('./routes/auth');
+const gamesRoutes = require('./routes/games');
+const ordersRoutes = require('./routes/orders');
+const usersRoutes = require('./routes/users');
+
+// Use Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/games', gamesRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/users', usersRoutes);
+
+// Health Check Route
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'API is running' });
 });
 
-const PORT = process.env.PORT || 5000;
+// Default Route
+app.get('/', (req, res) => {
+  res.send('Game Tribe API is running');
+});
 
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    message: 'Something went wrong!', 
+    error: process.env.NODE_ENV === 'production' ? null : err.message 
+  });
+});
+
+// Start Server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

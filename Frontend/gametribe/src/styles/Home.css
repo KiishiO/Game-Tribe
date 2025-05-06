@@ -1,0 +1,229 @@
+:root {
+    /* Light gray background */
+    --bg-primary: #5e548e; 
+    /* White for content areas */
+    --bg-secondary: #231942; 
+     /* Sidebar background */
+    --bg-sidebar: #0A1123; 
+    --text-primary: #e1e1e1;    
+    --text-secondary: #979494; 
+    --accent-color: #9f86c0;
+    --accent-color-alt: #8387c3;
+    --border-color: #282828; 
+    --shadow-sidebar: 0 2px 15px rgba(94, 84, 142, 0.3);
+    --shadow-elevation: 0 4px 6px rgba(94, 84, 142, 0.2),
+                        0 1px 3px rgba(94, 84, 142, 0.1);
+    --shadow-hover: 0 10px 20px rgba(94, 84, 142, 0.25),
+                    0 4px 8px rgba(94, 84, 142, 0.15);
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.bungee-shade-regular {
+    font-family: "Bungee Shade", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 6rem; /* Responsive font size */
+    text-align: center;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Fix for the gap between sidebar and main content */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    width: 100%;
+    padding-left: 80px; /* Same as sidebar width */
+    box-sizing: border-box;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--bg-primary);
+    box-sizing: border-box;
+}
+
+/* Content Wrapper with Elevation */
+.content-wrapper {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-elevation);
+    margin: 20px 0;
+    padding: 30px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Carousel Modifications */
+.carousel {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Catalog Container */
+.catalog-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+    width: 100%;
+}
+
+/* Card Modifications */
+.card {
+    background-color: var(--bg-primary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-elevation);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-image {
+    width: 100%;
+    height: 225px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.card-content {
+    margin: 10px;
+    flex-grow: 1;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-10px);
+}
+
+.card-actions {
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Button styles */
+.btn.btn-primary {
+    background-color: #5e548e;
+    border-color: #5e548e;
+}
+
+.btn.btn-primary:hover {
+    background-color: #9f86c0;
+    color: #0A1123;
+    border-color: #9f86c0;
+}
+
+/* Custom Modal Styling */
+.modal-content {
+    background-color: #f8f9fa; /* Light grayish background */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+.modal-header {
+    background-color: #e9ecef; /* Slightly different header background */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.modal-body {
+    background-color: #ffffff; /* White background for content */
+}
+
+.modal-footer {
+    background-color: #f1f3f5; /* Light background for footer */
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 992px) {
+    .bungee-shade-regular {
+        font-size: 4rem;
+    }
+    
+    .catalog-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .bungee-shade-regular {
+        font-size: 3rem;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .content-wrapper {
+        padding: 15px;
+    }
+    
+    .carousel-item img {
+        height: 300px;
+    }
+    
+    .catalog-container {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .bungee-shade-regular {
+        font-size: 2rem;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    .carousel-item img {
+        height: 200px;
+    }
+    
+    .catalog-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .card-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
