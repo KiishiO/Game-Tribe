@@ -200,6 +200,21 @@ const Search = () => {
   const genres = extractGenres();
   const { min: minPrice, max: maxPrice } = getPriceRange();
 
+  const getBadgeColor = (genre) => {
+    const colorMap = {
+      'Horror': 'primary',
+      'Action': 'secondary', 
+      'Adventure': 'success',
+      'Role-Playing': 'danger',
+      'Puzzle': 'warning',
+      'Simulation': 'info',
+      'Strategy': 'light',
+      'Multi-Player': 'dark'
+    };
+    
+    return colorMap[genre] || 'secondary';
+  };
+
   if (loading) {
     return (
       <div className="app-container">
@@ -354,9 +369,13 @@ const Search = () => {
                 <div className="game-info">
                   <h3 className="game-title">{game.name}</h3>
                   <div className="game-genres">
-                    {game.genres && game.genres.map((genre, index) => (
-                      <span key={index} className="genre-tag">{genre}</span>
-                    ))}
+                  {game.genres && game.genres.map((genre, index) => (
+                        <span 
+                          key={index}
+                          className={`badge bg-${getBadgeColor(genre)}-subtle border border-${getBadgeColor(genre)}-subtle text-${getBadgeColor(genre)}-emphasis rounded-pill me-1`}>
+                          {genre}
+                        </span>
+                      ))}
                   </div>
                   <button 
                     className="add-to-cart-btn"
@@ -398,8 +417,12 @@ const Search = () => {
                   <h3 className="game-title">{game.name}</h3>
                   <div className="game-genres">
                     {game.genres && game.genres.map((genre, index) => (
-                      <span key={index} className="genre-tag">{genre}</span>
-                    ))}
+                        <span 
+                          key={index}
+                          className={`badge bg-${getBadgeColor(genre)}-subtle border border-${getBadgeColor(genre)}-subtle text-${getBadgeColor(genre)}-emphasis rounded-pill me-1`}>
+                          {genre}
+                        </span>
+                      ))}
                   </div>
                   <button 
                     className="add-to-cart-btn"
