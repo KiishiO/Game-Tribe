@@ -1,0 +1,31 @@
+{
+    "courseName": "Construction of User Interfaces",
+    "semester": "Spring 2025",
+    "lastUpdated": "March 12, 2025",
+    "members": [
+      {
+        "name": "Iteoluwakishi Osomo",
+        "email": "iaosomo@iastate.edu",
+        "role": "Web Development & Database Management",
+        "contributions": [
+          "Designed and implemented the home page",
+          "Created website visual design and color scheme",
+          "Implemented shopping cart functionality",
+          "Implemented JavaScript functionality for game details",
+          "Created data structure for game information"
+        ]
+      },
+      {
+        "name": "Fuchinanya Akpuokwe",
+        "email": "fuchicay@iastate.edu",
+        "role": "Web Development & Database Management",
+        "contributions": [
+          "Created responsive navigation system",
+          "Implemented game catalog search page and features",
+          "Developed game catalog UI components",
+          "Developed user profile page",
+          "Helped with debugging and testing"
+        ]
+      }
+    ]
+  }
