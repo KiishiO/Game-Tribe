@@ -214,6 +214,198 @@
   }
 }
 
+/* Order confirmation styles */
+.order-details-container {
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(10, 17, 35, 0.3);
+  margin-top: 20px;
+}
+
+.order-header {
+  margin-bottom: 20px;
+}
+
+.order-header h5 {
+  color: var(--accent-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.order-header p {
+  margin-bottom: 5px;
+  color: var(--text-primary);
+}
+
+.order-header strong {
+  font-weight: 600;
+}
+
+.order-link {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.order-link:hover {
+  color: var(--accent-color-alt);
+  text-decoration: underline;
+}
+
+/* Modal animations */
+@keyframes confirmCheck {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.fa-check-circle {
+  animation: confirmCheck 0.5s ease-out;
+  color: #4CAF50;
+}
+
+/* Table styling */
+.table {
+  color: var(--text-primary);
+}
+
+.table thead th {
+  border-top: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 12px 8px;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 10px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table tfoot td {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 500;
+}
+
+/* Checkout modal input styles */
+.modal-body .form-control {
+  background-color: var(--bg-sidebar);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.modal-body .form-control:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(159, 134, 192, 0.3);
+}
+
+.modal-body .form-label {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.modal-body .form-check-input {
+  background-color: var(--bg-sidebar);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-body .form-check-input:checked {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.modal-body .form-check-label {
+  color: var(--text-primary);
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--bg-sidebar);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-color-alt);
+  border-color: var(--accent-color-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background-color: var(--bg-sidebar);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-primary);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .modal-dialog.modal-lg {
+      max-width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-header .row {
+      flex-direction: column;
+  }
+  
+  .order-header .col-md-6:last-child {
+      margin-top: 15px;
+  }
+  
+  .modal-grid {
+      grid-template-columns: 1fr;
+  }
+  
+  .modal-footer {
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .modal-footer button {
+      width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .order-details-container {
+      padding: 10px;
+  }
+  
+  .table th, 
+  .table td {
+      padding: 8px 5px;
+      font-size: 0.85rem;
+  }
+  
+  .modal-body h5 {
+      font-size: 1rem;
+  }
+  
+  .modal-body {
+      padding: 15px 10px;
+  }
+  
+  .modal-content {
+      width: 95%;
+  }
+}
+
 @media (max-width: 576px) {
   .bungee-shade-regular {
       font-size: 2rem;

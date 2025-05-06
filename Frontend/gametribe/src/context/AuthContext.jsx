@@ -1,4 +1,8 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+
+// API URL
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // Create the auth context
 const AuthContext = createContext();
@@ -13,110 +17,224 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [error, setError] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token'));
   
-  // Load user data from localStorage on component mount
+  // Set default auth header for all axios requests
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    const storedAuth = localStorage.getItem('isAuthenticated');
-    
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-    }
-    
-    if (storedAuth) {
-      setIsAuthenticated(JSON.parse(storedAuth));
-    }
-    
-    setLoading(false);
-  }, []);
-  
-  // Save user data to localStorage whenever it changes
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    if (token) {
+      axios.defaults.headers.common['x-auth-token'] = token;
     } else {
-      localStorage.removeItem('currentUser');
+      delete axios.defaults.headers.common['x-auth-token'];
     }
-  }, [currentUser]);
+  }, [token]);
   
-  // Save auth state to localStorage whenever it changes
+  // Load user data when token changes
   useEffect(() => {
-    localStorage.setItem('isAuthenticated', JSON.stringify(isAuthenticated));
-  }, [isAuthenticated]);
-  
-  // Register a new user
-  const register = (email, password, displayName, profileImage = '/assets/myotherimages/player_01.jpg') => {
-    // Check if user already exists
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const existingUser = users.find(user => user.email === email);
-    
-    if (existingUser) {
-      throw new Error('User with this email already exists');
-    }
-    
-    // Create new user object
-    const newUser = {
-      id: Date.now().toString(),
-      email,
-      password, // In a real app, this would be hashed
-      displayName,
-      profileImage,
-      memberSince: new Date().toISOString(),
-      personalNote: 'Click to enter text',
-      gamesOwned: 0,
-      favoriteGames: []
+    const loadUser = async () => {
+      if (!token) {
+        setCurrentUser(null);
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        setLoading(true);
+        const res = await axios.get(`${API_URL}/auth/user`);
+        
+        if (res.data) {
+          setCurrentUser(res.data);
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
+        console.error('Error loading user:', err.response?.data?.message || err.message);
+        localStorage.removeItem('token');
+        setToken(null);
+        setCurrentUser(null);
+        setIsAuthenticated(false);
+        setError(err.response?.data?.message || 'Authentication error. Please login again.');
+      } finally {
+        setLoading(false);
+      }
     };
     
-    // Add to users array
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-    
-    // Set current user and authenticate
-    setCurrentUser(newUser);
-    setIsAuthenticated(true);
-    
-    return newUser;
+    loadUser();
+  }, [token]);
+  
+  // Register a new user
+  const register = async (email, password, displayName, profileImage = '/assets/myotherimages/player_01.jpg') => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const res = await axios.post(`${API_URL}/auth/register`, {
+        email,
+        password,
+        displayName,
+        profileImage
+      });
+      
+      // Save token to localStorage
+      localStorage.setItem('token', res.data.token);
+      setToken(res.data.token);
+      
+      // Set current user and authenticate
+      setCurrentUser(res.data.user);
+      setIsAuthenticated(true);
+      
+      return res.data.user;
+    } catch (err) {
+      console.error('Registration error:', err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      throw new Error(err.response?.data?.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
   
   // Login an existing user
-  const login = (email, password) => {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (!user) {
-      throw new Error('Invalid email or password');
+  const login = async (email, password) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const res = await axios.post(`${API_URL}/auth/login`, {
+        email,
+        password
+      });
+      
+      // Save token to localStorage
+      localStorage.setItem('token', res.data.token);
+      setToken(res.data.token);
+      
+      // Set current user and authenticate
+      setCurrentUser(res.data.user);
+      setIsAuthenticated(true);
+      
+      return res.data.user;
+    } catch (err) {
+      console.error('Login error:', err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+      throw new Error(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
-    
-    setCurrentUser(user);
-    setIsAuthenticated(true);
-    
-    return user;
   };
   
   // Logout the current user
   const logout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem('token');
+    setToken(null);
+    
+    // Clear user state
     setCurrentUser(null);
     setIsAuthenticated(false);
   };
   
   // Update user profile
-  const updateProfile = (updates) => {
-    if (!currentUser) {
-      throw new Error('No user is logged in');
+  const updateProfile = async (updates) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const res = await axios.put(`${API_URL}/users/profile`, updates);
+      
+      // Update user in state
+      setCurrentUser(res.data);
+      
+      return res.data;
+    } catch (err) {
+      console.error('Profile update error:', err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || 'Failed to update profile. Please try again.');
+      throw new Error(err.response?.data?.message || 'Failed to update profile. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    
-    // Update user in state
-    const updatedUser = { ...currentUser, ...updates };
-    setCurrentUser(updatedUser);
-    
-    // Update user in storage
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const updatedUsers = users.map(u => 
-      u.id === currentUser.id ? updatedUser : u
-    );
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
-    
-    return updatedUser;
+  };
+  
+  // Get user's orders
+  const getUserOrders = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/orders`);
+      return res.data;
+    } catch (err) {
+      console.error('Error fetching orders:', err.response?.data?.message || err.message);
+      // Return empty array instead of throwing error
+      return [];
+    }
+  };
+  
+  // Add a new order
+  const addOrder = async (orderData) => {
+    try {
+      setError(null);
+      
+      const res = await axios.post(`${API_URL}/orders`, orderData);
+      
+      return res.data;
+    } catch (err) {
+      console.error('Order creation error:', err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || 'Failed to place order. Please try again.');
+      throw new Error(err.response?.data?.message || 'Failed to place order. Please try again.');
+    }
+  };
+  
+  // Add a game to favorites
+  const addToFavorites = async (gameId) => {
+    try {
+      setError(null);
+      
+      const res = await axios.post(`${API_URL}/users/favorite/${gameId}`);
+      
+      // Update user in state to reflect new favorites
+      const updatedUser = await axios.get(`${API_URL}/auth/user`);
+      setCurrentUser(updatedUser.data);
+      
+      return res.data;
+    } catch (err) {
+      console.error('Error adding to favorites:', err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || 'Failed to add game to favorites. Please try again.');
+      throw new Error(err.response?.data?.message || 'Failed to add game to favorites. Please try again.');
+    }
+  };
+  
+  // Remove a game from favorites
+  const removeFromFavorites = async (gameId) => {
+    try {
+      setError(null);
+      
+      const res = await axios.delete(`${API_URL}/users/favorite/${gameId}`);
+      
+      // Update user in state to reflect updated favorites
+      const updatedUser = await axios.get(`${API_URL}/auth/user`);
+      setCurrentUser(updatedUser.data);
+      
+      return res.data;
+    } catch (err) {
+      console.error('Error removing from favorites:', err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || 'Failed to remove game from favorites. Please try again.');
+      throw new Error(err.response?.data?.message || 'Failed to remove game from favorites. Please try again.');
+    }
+  };
+  
+  // Change password
+  const changePassword = async (currentPassword, newPassword) => {
+    try {
+      setError(null);
+      
+      const res = await axios.put(`${API_URL}/users/password`, {
+        currentPassword,
+        newPassword
+      });
+      
+      return res.data;
+    } catch (err) {
+      console.error('Password change error:', err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || 'Failed to change password. Please try again.');
+      throw new Error(err.response?.data?.message || 'Failed to change password. Please try again.');
+    }
   };
   
   // Context value
@@ -124,15 +242,21 @@ export const AuthProvider = ({ children }) => {
     currentUser,
     isAuthenticated,
     loading,
+    error,
     register,
     login,
     logout,
-    updateProfile
+    updateProfile,
+    getUserOrders,
+    addOrder,
+    addToFavorites,
+    removeFromFavorites,
+    changePassword
   };
   
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

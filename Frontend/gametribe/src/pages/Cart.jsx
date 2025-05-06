@@ -15,13 +15,31 @@ const Cart = () => {
     addToCart
   } = useCart();
   
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentUser, addOrder } = useAuth();
   const navigate = useNavigate();
   
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
+  const [orderDetails, setOrderDetails] = useState(null);
+  
+  // Form state
+  const [shippingInfo, setShippingInfo] = useState({
+    fullName: currentUser?.displayName || '',
+    email: currentUser?.email || '',
+    address: '',
+    city: '',
+    state: '',
+    zip: ''
+  });
+  
+  const [paymentInfo, setPaymentInfo] = useState({
+    method: 'creditCard',
+    cardNumber: '',
+    expDate: '',
+    cvv: ''
+  });
   
   // Calculate tax and total
   const subtotal = getCartTotal();
@@ -31,14 +49,23 @@ const Cart = () => {
   // Generate a random order number when confirmation modal shows
   useEffect(() => {
     if (showConfirmationModal) {
-      const randomNum = Math.floor(Math.random() * 10000);
-      setOrderNumber(`GTE${new Date().getFullYear()}-${randomNum}`);
+      const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+      const orderNum = `GT-${new Date().getFullYear()}-${randomNum}`;
+      setOrderNumber(orderNum);
     }
   }, [showConfirmationModal]);
   
   // Handle checkout button click
   const handleCheckoutClick = () => {
     if (isAuthenticated) {
+      // Pre-fill form with user data if available
+      if (currentUser) {
+        setShippingInfo(prev => ({
+          ...prev,
+          fullName: currentUser.displayName || prev.fullName,
+          email: currentUser.email || prev.email
+        }));
+      }
       setShowCheckoutModal(true);
     } else {
       setShowLoginPrompt(true);
@@ -53,11 +80,100 @@ const Cart = () => {
   
   // Handle place order
   const handlePlaceOrder = () => {
+    // Basic form validation
+    if (!validateForm()) {
+      return;
+    }
+    
+    // Create new order object
+    const order = {
+      orderNumber: `GT-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
+      items: [...cartItems],
+      subtotal,
+      tax,
+      total,
+      shippingInfo: { ...shippingInfo },
+      paymentMethod: paymentInfo.method,
+      date: new Date().toISOString()
+    };
+    
+    // Save order to context
+    addOrder(order);
+    
+    // Set order details for confirmation
+    setOrderDetails(order);
+    setOrderNumber(order.orderNumber);
+    
+    // Close checkout modal and show confirmation
     setShowCheckoutModal(false);
     setTimeout(() => {
       setShowConfirmationModal(true);
       clearCart();
     }, 500);
+  };
+  
+  // Validate form before submission
+  const validateForm = () => {
+    // Check shipping info
+    for (const field in shippingInfo) {
+      if (!shippingInfo[field]) {
+        alert(`Please fill in your ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+        return false;
+      }
+    }
+    
+    // Check payment info if credit card
+    if (paymentInfo.method === 'creditCard') {
+      if (!paymentInfo.cardNumber || !paymentInfo.expDate || !paymentInfo.cvv) {
+        alert('Please complete all payment information');
+        return false;
+      }
+      
+      // Basic format validation
+      if (!/^\d{16}$/.test(paymentInfo.cardNumber.replace(/\s/g, ''))) {
+        alert('Please enter a valid card number');
+        return false;
+      }
+      
+      if (!/^\d{2}\/\d{2}$/.test(paymentInfo.expDate)) {
+        alert('Please enter expiration date in MM/YY format');
+        return false;
+      }
+      
+      if (!/^\d{3,4}$/.test(paymentInfo.cvv)) {
+        alert('Please enter a valid CVV');
+        return false;
+      }
+    }
+    
+    return true;
+  };
+  
+  // Handle shipping info change
+  const handleShippingChange = (e) => {
+    const { id, value } = e.target;
+    setShippingInfo(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+  
+  // Handle payment method change
+  const handlePaymentMethodChange = (e) => {
+    const method = e.target.id;
+    setPaymentInfo(prev => ({
+      ...prev,
+      method
+    }));
+  };
+  
+  // Handle payment info change
+  const handlePaymentInfoChange = (e) => {
+    const { id, value } = e.target;
+    setPaymentInfo(prev => ({
+      ...prev,
+      [id]: value
+    }));
   };
   
   // Handle quantity change
@@ -75,6 +191,16 @@ const Cart = () => {
         }
       }
     }
+  };
+  
+  // Format date for display
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
   
   return (
@@ -320,28 +446,70 @@ const Cart = () => {
                     <form>
                       <div className="mb-3">
                         <label htmlFor="fullName" className="form-label">Full Name</label>
-                        <input type="text" className="form-control" id="fullName" required />
+                        <input 
+                          type="text" 
+                          className="form-control" 
+                          id="fullName" 
+                          value={shippingInfo.fullName}
+                          onChange={handleShippingChange}
+                          required 
+                        />
                       </div>
                       <div className="mb-3">
                         <label htmlFor="email" className="form-label">Email</label>
-                        <input type="email" className="form-control" id="email" required />
+                        <input 
+                          type="email" 
+                          className="form-control" 
+                          id="email" 
+                          value={shippingInfo.email}
+                          onChange={handleShippingChange}
+                          required 
+                        />
                       </div>
                       <div className="mb-3">
                         <label htmlFor="address" className="form-label">Address</label>
-                        <input type="text" className="form-control" id="address" required />
+                        <input 
+                          type="text" 
+                          className="form-control" 
+                          id="address" 
+                          value={shippingInfo.address}
+                          onChange={handleShippingChange}
+                          required 
+                        />
                       </div>
                       <div className="row">
                         <div className="col-md-6 mb-3">
                           <label htmlFor="city" className="form-label">City</label>
-                          <input type="text" className="form-control" id="city" required />
+                          <input 
+                            type="text" 
+                            className="form-control" 
+                            id="city" 
+                            value={shippingInfo.city}
+                            onChange={handleShippingChange}
+                            required 
+                          />
                         </div>
                         <div className="col-md-3 mb-3">
                           <label htmlFor="state" className="form-label">State</label>
-                          <input type="text" className="form-control" id="state" required />
+                          <input 
+                            type="text" 
+                            className="form-control" 
+                            id="state" 
+                            value={shippingInfo.state}
+                            onChange={handleShippingChange}
+                            required 
+                          />
                         </div>
                         <div className="col-md-3 mb-3">
                           <label htmlFor="zip" className="form-label">ZIP</label>
-                          <input type="text" className="form-control" id="zip" required />
+                          <input 
+                            type="text" 
+                            className="form-control" 
+                            id="zip" 
+                            value={shippingInfo.zip}
+                            onChange={handleShippingChange}
+                            required 
+                          />
                         </div>
                       </div>
                     </form>
@@ -351,33 +519,73 @@ const Cart = () => {
                     <div className="card mb-3">
                       <div className="card-body">
                         <div className="form-check mb-2">
-                          <input className="form-check-input" type="radio" name="paymentMethod" id="creditCard" defaultChecked />
+                          <input 
+                            className="form-check-input" 
+                            type="radio" 
+                            name="paymentMethod" 
+                            id="creditCard" 
+                            checked={paymentInfo.method === 'creditCard'}
+                            onChange={handlePaymentMethodChange}
+                          />
                           <label className="form-check-label" htmlFor="creditCard">
                             Credit Card
                           </label>
                         </div>
-                        <div id="creditCardForm">
-                          <div className="mb-3">
-                            <label htmlFor="cardNumber" className="form-label">Card Number</label>
-                            <input type="text" className="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" required />
-                          </div>
-                          <div className="row">
-                            <div className="col-md-6 mb-3">
-                              <label htmlFor="expDate" className="form-label">Expiration Date</label>
-                              <input type="text" className="form-control" id="expDate" placeholder="MM/YY" required />
+                        {paymentInfo.method === 'creditCard' && (
+                          <div id="creditCardForm">
+                            <div className="mb-3">
+                              <label htmlFor="cardNumber" className="form-label">Card Number</label>
+                              <input 
+                                type="text" 
+                                className="form-control" 
+                                id="cardNumber" 
+                                placeholder="XXXX XXXX XXXX XXXX" 
+                                value={paymentInfo.cardNumber}
+                                onChange={handlePaymentInfoChange}
+                                required 
+                              />
                             </div>
-                            <div className="col-md-6 mb-3">
-                              <label htmlFor="cvv" className="form-label">CVV</label>
-                              <input type="text" className="form-control" id="cvv" placeholder="XXX" required />
+                            <div className="row">
+                              <div className="col-md-6 mb-3">
+                                <label htmlFor="expDate" className="form-label">Expiration Date</label>
+                                <input 
+                                  type="text" 
+                                  className="form-control" 
+                                  id="expDate" 
+                                  placeholder="MM/YY" 
+                                  value={paymentInfo.expDate}
+                                  onChange={handlePaymentInfoChange}
+                                  required 
+                                />
+                              </div>
+                              <div className="col-md-6 mb-3">
+                                <label htmlFor="cvv" className="form-label">CVV</label>
+                                <input 
+                                  type="text" 
+                                  className="form-control" 
+                                  id="cvv" 
+                                  placeholder="XXX" 
+                                  value={paymentInfo.cvv}
+                                  onChange={handlePaymentInfoChange}
+                                  required 
+                                />
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                     <div className="card">
                       <div className="card-body">
                         <div className="form-check">
-                          <input className="form-check-input" type="radio" name="paymentMethod" id="paypal" />
+                          <input 
+                            className="form-check-input" 
+                            type="radio" 
+                            name="paymentMethod" 
+                            id="paypal" 
+                            checked={paymentInfo.method === 'paypal'}
+                            onChange={handlePaymentMethodChange}
+                          />
                           <label className="form-check-label" htmlFor="paypal">
                             PayPal
                           </label>
@@ -431,29 +639,115 @@ const Cart = () => {
       )}
 
       {/* Order Confirmation Modal */}
-      {showConfirmationModal && (
+      {showConfirmationModal && orderDetails && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-          <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-dialog modal-lg modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Order Placed!</h5>
+                <h5 className="modal-title">Order Confirmation</h5>
                 <button 
                   type="button" 
                   className="btn-close" 
                   onClick={() => setShowConfirmationModal(false)}
                 ></button>
               </div>
-              <div className="modal-body text-center">
-                <i className="fas fa-check-circle fa-5x text-success mb-4"></i>
-                <h4>Thank you for your purchase!</h4>
-                <p>Your order has been received and is being processed.</p>
-                <p>Order confirmation #{orderNumber}</p>
-                <p>A confirmation email has been sent to your email address.</p>
+              <div className="modal-body">
+                <div className="text-center mb-4">
+                  <i className="fas fa-check-circle fa-5x text-success mb-3"></i>
+                  <h4>Thank you for your purchase!</h4>
+                  <p>Your order has been received and is being processed.</p>
+                </div>
+                
+                <div className="order-details-container">
+                  <div className="order-header">
+                    <div className="row">
+                      <div className="col-md-6">
+                        <h5>Order Information</h5>
+                        <p><strong>Order Number:</strong> {orderNumber}</p>
+                        <p><strong>Order Date:</strong> {formatDate(orderDetails.date)}</p>
+                        <p><strong>Payment Method:</strong> {orderDetails.paymentMethod === 'creditCard' ? 'Credit Card' : 'PayPal'}</p>
+                      </div>
+                      <div className="col-md-6">
+                        <h5>Shipping Information</h5>
+                        <p><strong>Name:</strong> {orderDetails.shippingInfo.fullName}</p>
+                        <p><strong>Email:</strong> {orderDetails.shippingInfo.email}</p>
+                        <p><strong>Address:</strong> {orderDetails.shippingInfo.address}, {orderDetails.shippingInfo.city}, {orderDetails.shippingInfo.state} {orderDetails.shippingInfo.zip}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <h5 className="mt-4">Order Summary</h5>
+                  <div className="table-responsive">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>Item</th>
+                          <th>Price</th>
+                          <th>Quantity</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orderDetails.items.map(item => (
+                          <tr key={item.id}>
+                            <td>
+                              <div className="d-flex align-items-center">
+                                <img 
+                                  src={`/assets/images/${item.image}`} 
+                                  alt={item.name} 
+                                  className="me-3" 
+                                  style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = '/assets/myotherimages/GameTribe_Logo.png';
+                                  }}
+                                />
+                                <span>{item.name}</span>
+                              </div>
+                            </td>
+                            <td>${item.price.toFixed(2)}</td>
+                            <td>{item.quantity}</td>
+                            <td>${(item.price * item.quantity).toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td colSpan="3" className="text-end"><strong>Subtotal:</strong></td>
+                          <td>${orderDetails.subtotal.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                          <td colSpan="3" className="text-end"><strong>Tax:</strong></td>
+                          <td>${orderDetails.tax.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                          <td colSpan="3" className="text-end"><strong>Total:</strong></td>
+                          <td className="fw-bold">${orderDetails.total.toFixed(2)}</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  
+                  <div className="text-center mt-4">
+                    <p>A confirmation email has been sent to {orderDetails.shippingInfo.email}</p>
+                    <p>You can view your order history in your <Link to="/profile" className="order-link">profile page</Link>.</p>
+                  </div>
+                </div>
               </div>
               <div className="modal-footer">
                 <button 
                   type="button" 
                   className="btn btn-primary" 
+                  onClick={() => {
+                    setShowConfirmationModal(false);
+                    navigate('/profile');
+                  }}
+                >
+                  Go to Profile
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
                   onClick={() => setShowConfirmationModal(false)}
                 >
                   Continue Shopping

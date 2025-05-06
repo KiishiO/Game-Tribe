@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Profile.css';
 
 const Profile = () => {
-  const { currentUser, isAuthenticated, updateProfile, logout } = useAuth();
+  const { currentUser, isAuthenticated, updateProfile, logout, getUserOrders } = useAuth();
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('about');
@@ -13,6 +13,10 @@ const Profile = () => {
   const [personalNoteText, setPersonalNoteText] = useState('');
   const [editableDisplayName, setEditableDisplayName] = useState('');
   const [selectedProfileImage, setSelectedProfileImage] = useState('');
+  const [orders, setOrders] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Array of profile images to choose from
   const profileImages = [
@@ -45,14 +49,31 @@ const Profile = () => {
     }
   }, [isAuthenticated, navigate]);
   
-  // Initialize form values when user data is loaded
+  // Initialize form values and load orders when user data is loaded
   useEffect(() => {
     if (currentUser) {
       setPersonalNoteText(currentUser.personalNote || 'Click to enter text');
       setEditableDisplayName(currentUser.displayName || '');
       setSelectedProfileImage(currentUser.profileImage || profileImages[0]);
+      
+      // Load user orders
+      const loadOrders = async () => {
+        setIsLoading(true);
+        try {
+          const userOrders = await getUserOrders();
+          // Ensure orders is always an array
+          setOrders(Array.isArray(userOrders) ? userOrders : []);
+        } catch (error) {
+          console.error('Error loading orders:', error);
+          setOrders([]);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      loadOrders();
     }
-  }, [currentUser]);
+  }, [currentUser, getUserOrders]);
   
   // Get current accent color based on profile image
   const getCurrentAccentColor = () => {
@@ -116,6 +137,12 @@ const Profile = () => {
     }
   };
   
+  // Handle viewing order details
+  const handleViewOrder = (order) => {
+    setSelectedOrder(order);
+    setShowOrderModal(true);
+  };
+  
   // Handle logout
   const handleLogout = () => {
     logout();
@@ -126,6 +153,65 @@ const Profile = () => {
   if (!isAuthenticated || !currentUser) {
     return <div className="loading">Loading profile...</div>;
   }
+  
+  // Render the orders tab content
+  const renderOrdersTab = () => {
+    if (isLoading) {
+      return <div className="loading">Loading your orders...</div>;
+    }
+    
+    // Check if orders is an array and has items
+    if (!Array.isArray(orders) || orders.length === 0) {
+      return (
+        <div className="coming-soon">
+          <p>You haven't placed any orders yet.</p>
+          <Link to="/search" className="btn btn-primary mt-3">
+            Browse Games
+          </Link>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="orders-list">
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map(order => (
+                <tr key={order._id || order.id} className="order-row">
+                  <td>{order.orderNumber}</td>
+                  <td>{formatDate(order.date || order.createdAt)}</td>
+                  <td>{order.items.reduce((sum, item) => sum + item.quantity, 0)} items</td>
+                  <td>${order.total.toFixed(2)}</td>
+                  <td>
+                    <span className="status-badge">{order.status}</span>
+                  </td>
+                  <td>
+                    <button 
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={() => handleViewOrder(order)}
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
   
   return (
     <div className="app-container">
@@ -172,9 +258,16 @@ const Profile = () => {
             >
               Favorite Games
             </div>
+            <div 
+              className={`tab ${activeTab === 'orders' ? 'active' : ''}`}
+              onClick={() => handleTabClick('orders')}
+            >
+              Order History
+            </div>
           </div>
 
           <div className="profile-details">
+            {/* About Tab */}
             <div className={`tab-content ${activeTab === 'about' ? 'active' : ''}`} id="aboutTab">
               <div className="detail-section">
                 <h3>Member Since</h3>
@@ -214,6 +307,7 @@ const Profile = () => {
               </div>
             </div>
 
+            {/* Favorites Tab */}
             <div className={`tab-content ${activeTab === 'activity' ? 'active' : ''}`} id="activityTab">
               {currentUser.favoriteGames && currentUser.favoriteGames.length > 0 ? (
                 <div className="favorite-games">
@@ -225,6 +319,11 @@ const Profile = () => {
                   <p>You haven't added any favorite games yet</p>
                 </div>
               )}
+            </div>
+            
+            {/* Orders Tab */}
+            <div className={`tab-content ${activeTab === 'orders' ? 'active' : ''}`} id="ordersTab">
+              {renderOrdersTab()}
             </div>
           </div>
         </div>
@@ -261,6 +360,93 @@ const Profile = () => {
             <div className="popup-actions">
               <button className="btn-cancel" onClick={handleCancelEdit}>Cancel</button>
               <button className="btn-save" onClick={handleSaveProfile}>Save Changes</button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Order Details Modal */}
+      {showOrderModal && selectedOrder && (
+        <div className="edit-profile-popup order-details-popup">
+          <div className="edit-profile-modal order-details-modal">
+            <h2>Order Details</h2>
+            <span className="close-btn" onClick={() => setShowOrderModal(false)}>&times;</span>
+            
+            <div className="order-header">
+              <div className="row">
+                <div className="col-md-6">
+                  <h5>Order Information</h5>
+                  <p><strong>Order Number:</strong> {selectedOrder.orderNumber}</p>
+                  <p><strong>Order Date:</strong> {formatDate(selectedOrder.date || selectedOrder.createdAt)}</p>
+                  <p><strong>Status:</strong> {selectedOrder.status}</p>
+                  <p><strong>Payment Method:</strong> {selectedOrder.paymentMethod === 'creditCard' ? 'Credit Card' : 'PayPal'}</p>
+                </div>
+                <div className="col-md-6">
+                  <h5>Shipping Information</h5>
+                  <p><strong>Name:</strong> {selectedOrder.shippingInfo.fullName}</p>
+                  <p><strong>Email:</strong> {selectedOrder.shippingInfo.email}</p>
+                  <p><strong>Address:</strong> {selectedOrder.shippingInfo.address}, {selectedOrder.shippingInfo.city}, {selectedOrder.shippingInfo.state} {selectedOrder.shippingInfo.zip}</p>
+                </div>
+              </div>
+            </div>
+            
+            <h5 className="mt-4">Items</h5>
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedOrder.items.map((item, index) => (
+                    <tr key={item.id || item._id || index}>
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <img 
+                            src={`/assets/images/${item.image}`} 
+                            alt={item.name} 
+                            className="me-3" 
+                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = '/assets/myotherimages/GameTribe_Logo.png';
+                            }}
+                          />
+                          <span>{item.name}</span>
+                        </div>
+                      </td>
+                      <td>${item.price.toFixed(2)}</td>
+                      <td>{item.quantity}</td>
+                      <td>${(item.price * item.quantity).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan="3" className="text-end"><strong>Subtotal:</strong></td>
+                    <td>${selectedOrder.subtotal.toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="3" className="text-end"><strong>Tax:</strong></td>
+                    <td>${selectedOrder.tax.toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="3" className="text-end"><strong>Total:</strong></td>
+                    <td className="fw-bold">${selectedOrder.total.toFixed(2)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            
+            <div className="popup-actions mt-4">
+              <button className="btn-download">
+                <i className="fas fa-download me-2"></i> Download Receipt
+              </button>
+              <button className="btn-close-order" onClick={() => setShowOrderModal(false)}>Close</button>
             </div>
           </div>
         </div>

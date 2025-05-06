@@ -361,6 +361,242 @@
   }
 }
 
+/* Order History Styles */
+.orders-list {
+  background-color: rgba(10, 17, 35, 0.3);
+  border-radius: 10px;
+  padding: 15px;
+  overflow: hidden;
+}
+
+.table {
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.table thead th {
+  border-top: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 15px 8px;
+  color: var(--text-secondary);
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 12px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.order-row {
+  transition: background-color 0.3s ease;
+}
+
+.order-row:hover {
+  background-color: rgba(10, 17, 35, 0.5);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
+}
+
+.btn-outline-primary {
+  border: 1px solid var(--accent-color);
+  background-color: transparent;
+  color: var(--accent-color);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--accent-color);
+  color: var(--bg-sidebar);
+}
+
+/* Order Details Modal */
+.order-details-popup {
+  z-index: 1100;
+}
+
+.order-details-modal {
+  max-width: 800px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 25px;
+}
+
+.order-details-modal h2 {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.order-header {
+  background-color: rgba(10, 17, 35, 0.3);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.order-header h5 {
+  color: var(--accent-color);
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.order-header p {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.order-header strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.order-details-modal .table {
+  margin-top: 15px;
+}
+
+.order-details-modal .table td,
+.order-details-modal .table th {
+  padding: 10px;
+}
+
+.order-details-modal .table tfoot td {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 500;
+}
+
+.order-link {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.order-link:hover {
+  color: var(--accent-color-alt);
+  text-decoration: underline;
+}
+
+.btn-download {
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+  background-color: var(--accent-color);
+  color: var(--bg-sidebar);
+}
+
+.btn-close-order {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--text-secondary);
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-close-order:hover {
+  background-color: var(--text-secondary);
+  color: var(--bg-sidebar);
+}
+
+/* Cart Styles for Order Confirmation */
+.order-details-container {
+  background-color: rgba(10, 17, 35, 0.3);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .order-details-modal {
+      padding: 15px;
+  }
+  
+  .order-header .row {
+      flex-direction: column;
+  }
+  
+  .order-header .col-md-6:last-child {
+      margin-top: 15px;
+  }
+  
+  .table-responsive {
+      margin: 0 -15px;
+      width: calc(100% + 30px);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .order-details-modal h2 {
+      font-size: 1.5rem;
+  }
+  
+  .orders-list {
+      padding: 10px;
+  }
+  
+  .table thead th,
+  .table tbody td {
+      padding: 8px 5px;
+      font-size: 0.85rem;
+  }
+  
+  .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+  }
+  
+  .status-badge {
+      padding: 2px 8px;
+      font-size: 0.7rem;
+  }
+  
+  .popup-actions {
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .btn-download,
+  .btn-close-order {
+      width: 100%;
+  }
+}
+
 @media screen and (max-width: 576px) {
   .app-container {
       padding-left: 60px;

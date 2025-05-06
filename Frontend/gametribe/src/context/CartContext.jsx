@@ -1,4 +1,8 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+
+// API URL
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // Create the context
 const CartContext = createContext();
@@ -33,27 +37,38 @@ export const CartProvider = ({ children }) => {
   }, [recentlyViewed]);
   
   // Add item to cart
-  const addToCart = (game) => {
-    setCartItems(prevItems => {
+  const addToCart = async (game) => {
+    try {
+      // Check if the game data is complete
+      if (!game.id && game._id) {
+        // If using MongoDB _id, convert to id for consistency
+        game.id = game._id;
+      }
+      
       // Check if item already in cart
-      const existingItemIndex = prevItems.findIndex(item => item.id === game.id);
+      const existingItemIndex = cartItems.findIndex(item => item.id === game.id);
       
       if (existingItemIndex > -1) {
         // Update quantity if item exists
-        const updatedItems = [...prevItems];
+        const updatedItems = [...cartItems];
         updatedItems[existingItemIndex] = {
           ...updatedItems[existingItemIndex],
           quantity: updatedItems[existingItemIndex].quantity + 1
         };
-        return updatedItems;
+        setCartItems(updatedItems);
       } else {
         // Add new item with quantity 1
-        return [...prevItems, { ...game, quantity: 1 }];
+        setCartItems([...cartItems, { ...game, quantity: 1 }]);
       }
-    });
-    
-    // Show notification
-    showNotification(`${game.name} has been added to your cart!`);
+      
+      // Show notification
+      showNotification(`${game.name} has been added to your cart!`);
+      
+      return true;
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+      return false;
+    }
   };
   
   // Remove item from cart
@@ -81,14 +96,27 @@ export const CartProvider = ({ children }) => {
   };
   
   // Add to recently viewed
-  const addToRecentlyViewed = (game) => {
-    setRecentlyViewed(prevItems => {
-      // Remove if already in list
-      const filteredItems = prevItems.filter(item => item.id !== game.id);
+  const addToRecentlyViewed = async (game) => {
+    try {
+      // Check if the game data is complete
+      if (!game.id && game._id) {
+        // If using MongoDB _id, convert to id for consistency
+        game.id = game._id;
+      }
       
-      // Add to beginning of array and keep only most recent 4
-      return [game, ...filteredItems].slice(0, 4);
-    });
+      setRecentlyViewed(prevItems => {
+        // Remove if already in list
+        const filteredItems = prevItems.filter(item => item.id !== game.id);
+        
+        // Add to beginning of array and keep only most recent 4
+        return [game, ...filteredItems].slice(0, 4);
+      });
+      
+      return true;
+    } catch (err) {
+      console.error('Error adding to recently viewed:', err);
+      return false;
+    }
   };
   
   // Show notification
@@ -125,6 +153,50 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((count, item) => count + item.quantity, 0);
   };
   
+  // Fetch games from API
+  const fetchGames = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/games`);
+      return response.data;
+    } catch (err) {
+      console.error('Error fetching games:', err);
+      return [];
+    }
+  };
+  
+  // Fetch game by ID from API
+  const fetchGameById = async (id) => {
+    try {
+      const response = await axios.get(`${API_URL}/games/${id}`);
+      return response.data;
+    } catch (err) {
+      console.error(`Error fetching game with ID ${id}:`, err);
+      return null;
+    }
+  };
+  
+  // Fetch new releases from API
+  const fetchNewReleases = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/games/new-releases`);
+      return response.data;
+    } catch (err) {
+      console.error('Error fetching new releases:', err);
+      return [];
+    }
+  };
+  
+  // Fetch popular games from API
+  const fetchPopularGames = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/games/popular`);
+      return response.data;
+    } catch (err) {
+      console.error('Error fetching popular games:', err);
+      return [];
+    }
+  };
+  
   // Context value
   const value = {
     cartItems,
@@ -135,7 +207,11 @@ export const CartProvider = ({ children }) => {
     clearCart,
     addToRecentlyViewed,
     getCartTotal,
-    getCartCount
+    getCartCount,
+    fetchGames,
+    fetchGameById,
+    fetchNewReleases,
+    fetchPopularGames
   };
   
   return (
