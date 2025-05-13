@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
 // API URL
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Create the auth context
 const AuthContext = createContext();
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
       
       try {
         setLoading(true);
-        const res = await axios.get(`${API_URL}/auth/user`);
+        const res = await axios.get(`${API_URL}/api/auth/user`);
         
         if (res.data) {
           setCurrentUser(res.data);
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const res = await axios.post(`${API_URL}/auth/register`, {
+      const res = await axios.post(`${API_URL}/api/auth/register`, {
         email,
         password,
         displayName,
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const res = await axios.post(`${API_URL}/auth/login`, {
+      const res = await axios.post(`${API_URL}/api/auth/login`, {
         email,
         password
       });
@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const res = await axios.put(`${API_URL}/users/profile`, updates);
+      const res = await axios.put(`${API_URL}/api/users/profile`, updates);
       
       // Update user in state
       setCurrentUser(res.data);
@@ -154,10 +154,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
   
-  // Get user's orders
+  // Get user's orders - only if authenticated
   const getUserOrders = async () => {
+    if (!isAuthenticated || !token) {
+      return [];
+    }
+    
     try {
-      const res = await axios.get(`${API_URL}/orders`);
+      const res = await axios.get(`${API_URL}/api/orders`);
       return res.data;
     } catch (err) {
       console.error('Error fetching orders:', err.response?.data?.message || err.message);
@@ -171,7 +175,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       
-      const res = await axios.post(`${API_URL}/orders`, orderData);
+      const res = await axios.post(`${API_URL}/api/orders`, orderData);
       
       return res.data;
     } catch (err) {
@@ -186,10 +190,10 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       
-      const res = await axios.post(`${API_URL}/users/favorite/${gameId}`);
+      const res = await axios.post(`${API_URL}/api/users/favorite/${gameId}`);
       
       // Update user in state to reflect new favorites
-      const updatedUser = await axios.get(`${API_URL}/auth/user`);
+      const updatedUser = await axios.get(`${API_URL}/api/auth/user`);
       setCurrentUser(updatedUser.data);
       
       return res.data;
@@ -205,10 +209,10 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       
-      const res = await axios.delete(`${API_URL}/users/favorite/${gameId}`);
+      const res = await axios.delete(`${API_URL}/api/users/favorite/${gameId}`);
       
       // Update user in state to reflect updated favorites
-      const updatedUser = await axios.get(`${API_URL}/auth/user`);
+      const updatedUser = await axios.get(`${API_URL}/api/auth/user`);
       setCurrentUser(updatedUser.data);
       
       return res.data;
@@ -224,7 +228,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       
-      const res = await axios.put(`${API_URL}/users/password`, {
+      const res = await axios.put(`${API_URL}/api/users/password`, {
         currentPassword,
         newPassword
       });

@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
     unique: true,
-    trim: true,
     lowercase: true
   },
   password: {
@@ -15,8 +13,7 @@ const UserSchema = new Schema({
   },
   displayName: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   profileImage: {
     type: String,
@@ -35,11 +32,41 @@ const UserSchema = new Schema({
     default: 0
   },
   favoriteGames: [{
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Game'
-  }]
-}, {
-  timestamps: true
+  }],
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+// Add virtual for orders
+userSchema.virtual('orders', {
+  ref: 'Order',
+  localField: '_id',
+  foreignField: 'user'
+});
+
+// Make sure virtuals are included in JSON
+userSchema.set('toJSON', { virtuals: true });
+
+// Update the updatedAt field on save
+userSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+module.exports = mongoose.model('User', userSchema);
