@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const auth = require('../middleware/auth');
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
@@ -38,7 +39,8 @@ router.post('/register', async (req, res) => {
     // Create JWT token
     const payload = {
       user: {
-        id: user.id
+        id: user.id,
+        isAdmin: user.isAdmin
       }
     };
 
@@ -57,7 +59,8 @@ router.post('/register', async (req, res) => {
             profileImage: user.profileImage,
             memberSince: user.memberSince,
             personalNote: user.personalNote,
-            gamesOwned: user.gamesOwned
+            gamesOwned: user.gamesOwned,
+            isAdmin: user.isAdmin
           }
         });
       }
@@ -90,7 +93,8 @@ router.post('/login', async (req, res) => {
     // Create JWT token
     const payload = {
       user: {
-        id: user.id
+        id: user.id,
+        isAdmin: user.isAdmin
       }
     };
 
@@ -109,7 +113,8 @@ router.post('/login', async (req, res) => {
             profileImage: user.profileImage,
             memberSince: user.memberSince,
             personalNote: user.personalNote,
-            gamesOwned: user.gamesOwned
+            gamesOwned: user.gamesOwned,
+            isAdmin: user.isAdmin
           }
         });
       }
@@ -123,21 +128,10 @@ router.post('/login', async (req, res) => {
 // @route   GET api/auth/user
 // @desc    Get user data
 // @access  Private
-router.get('/user', async (req, res) => {
+router.get('/user', auth, async (req, res) => {
   try {
-    // Get token from header
-    const token = req.header('x-auth-token');
-
-    // Check if token exists
-    if (!token) {
-      return res.status(401).json({ message: 'No token, authorization denied' });
-    }
-
-    // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    
     // Get user from database
-    const user = await User.findById(decoded.user.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -146,9 +140,6 @@ router.get('/user', async (req, res) => {
     res.json(user);
   } catch (err) {
     console.error(err.message);
-    if (err.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: 'Token is not valid' });
-    }
     res.status(500).send('Server error');
   }
 });

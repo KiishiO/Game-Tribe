@@ -1,14 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS configuration - MOVE THIS BEFORE OTHER MIDDLEWARE
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:3001'], 
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+// Middleware - CORRECT ORDER
+app.use(cors(corsOptions)); // Use CORS with options
 app.use(express.json());
 
 // MongoDB Connection
@@ -29,12 +34,7 @@ const authRoutes = require('./routes/auth');
 const gamesRoutes = require('./routes/games');
 const ordersRoutes = require('./routes/orders');
 const usersRoutes = require('./routes/users');
-
-// Use Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/games', gamesRoutes);
-app.use('/api/orders', ordersRoutes);
-app.use('/api/users', usersRoutes);
+const adminRoutes = require('./routes/admin'); // Move this up with other imports
 
 // Health Check Route
 app.get('/api/health', (req, res) => {
@@ -45,6 +45,13 @@ app.get('/api/health', (req, res) => {
 app.get('/', (req, res) => {
   res.send('Game Tribe API is running');
 });
+
+// Use Routes - ORDER MATTERS
+app.use('/api/auth', authRoutes);
+app.use('/api/games', gamesRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/admin', adminRoutes); // Admin routes should be after auth
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

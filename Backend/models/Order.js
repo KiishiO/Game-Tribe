@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const OrderSchema = new Schema({
+const orderSchema = new mongoose.Schema({
   user: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
@@ -13,27 +12,10 @@ const OrderSchema = new Schema({
     unique: true
   },
   items: [{
-    game: {
-      type: Schema.Types.ObjectId,
-      ref: 'Game',
-      required: false  // Make optional since we might not have valid ObjectIds
-    },
-    gameId: {
-      type: Number,  // Add this for numeric game IDs
-      required: false
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    price: {
-      type: Number,
-      required: true
-    },
-    quantity: {
-      type: Number,
-      required: true
-    },
+    gameId: Number,
+    name: String,
+    price: Number,
+    quantity: Number,
     image: String
   }],
   subtotal: {
@@ -49,43 +31,24 @@ const OrderSchema = new Schema({
     required: true
   },
   shippingInfo: {
-    fullName: {
-      type: String,
-      required: true
-    },
-    email: {
-      type: String,
-      required: true
-    },
-    address: {
-      type: String,
-      required: true
-    },
-    city: {
-      type: String,
-      required: true
-    },
-    state: {
-      type: String,
-      required: true
-    },
-    zip: {
-      type: String,
-      required: true
-    }
+    fullName: String,
+    email: String,
+    address: String,
+    city: String,
+    state: String,
+    zip: String
   },
   paymentMethod: {
     type: String,
-    enum: ['creditCard', 'paypal'],
     required: true
   },
   status: {
     type: String,
-    enum: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
-    default: 'Confirmed'
+    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+    default: 'pending'
   }
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('Order', OrderSchema);
+module.exports = mongoose.model('Order', orderSchema);
