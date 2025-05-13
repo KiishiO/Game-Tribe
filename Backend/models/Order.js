@@ -15,11 +15,25 @@ const OrderSchema = new Schema({
   items: [{
     game: {
       type: Schema.Types.ObjectId,
-      ref: 'Game'
+      ref: 'Game',
+      required: false  // Make optional since we might not have valid ObjectIds
     },
-    name: String,
-    price: Number,
-    quantity: Number,
+    gameId: {
+      type: Number,  // Add this for numeric game IDs
+      required: false
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    },
+    quantity: {
+      type: Number,
+      required: true
+    },
     image: String
   }],
   subtotal: {
@@ -35,12 +49,30 @@ const OrderSchema = new Schema({
     required: true
   },
   shippingInfo: {
-    fullName: String,
-    email: String,
-    address: String,
-    city: String,
-    state: String,
-    zip: String
+    fullName: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    },
+    address: {
+      type: String,
+      required: true
+    },
+    city: {
+      type: String,
+      required: true
+    },
+    state: {
+      type: String,
+      required: true
+    },
+    zip: {
+      type: String,
+      required: true
+    }
   },
   paymentMethod: {
     type: String,

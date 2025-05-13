@@ -78,38 +78,83 @@ const Cart = () => {
     navigate('/login');
   };
   
+  // // Handle place order
+  // const handlePlaceOrder = () => {
+  //   // Basic form validation
+  //   if (!validateForm()) {
+  //     return;
+  //   }
+    
+  //   // Create new order object
+  //   const order = {
+  //     orderNumber: `GT-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
+  //     items: [...cartItems],
+  //     subtotal,
+  //     tax,
+  //     total,
+  //     shippingInfo: { ...shippingInfo },
+  //     paymentMethod: paymentInfo.method,
+  //     date: new Date().toISOString()
+  //   };
+    
+  //   // Save order to context
+  //   addOrder(order);
+    
+  //   // Set order details for confirmation
+  //   setOrderDetails(order);
+  //   setOrderNumber(order.orderNumber);
+    
+  //   // Close checkout modal and show confirmation
+  //   setShowCheckoutModal(false);
+  //   setTimeout(() => {
+  //     setShowConfirmationModal(true);
+  //     clearCart();
+  //   }, 500);
+  // };
+
   // Handle place order
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     // Basic form validation
     if (!validateForm()) {
       return;
     }
     
-    // Create new order object
-    const order = {
-      orderNumber: `GT-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
-      items: [...cartItems],
-      subtotal,
-      tax,
-      total,
-      shippingInfo: { ...shippingInfo },
-      paymentMethod: paymentInfo.method,
-      date: new Date().toISOString()
-    };
-    
-    // Save order to context
-    addOrder(order);
-    
-    // Set order details for confirmation
-    setOrderDetails(order);
-    setOrderNumber(order.orderNumber);
-    
-    // Close checkout modal and show confirmation
-    setShowCheckoutModal(false);
-    setTimeout(() => {
-      setShowConfirmationModal(true);
-      clearCart();
-    }, 500);
+    try {
+      // Create order data matching the backend schema
+      const orderData = {
+        orderNumber: `GT-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
+        items: cartItems.map(item => ({
+          // Include gameId for numeric IDs
+          gameId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image
+        })),
+        subtotal: parseFloat(subtotal.toFixed(2)),
+        tax: parseFloat(tax.toFixed(2)),
+        total: parseFloat(total.toFixed(2)),
+        shippingInfo: { ...shippingInfo },
+        paymentMethod: paymentInfo.method
+      };
+      
+      // Save order using the auth context's addOrder
+      const savedOrder = await addOrder(orderData);
+      
+      // Set order details for confirmation
+      setOrderDetails(savedOrder);
+      setOrderNumber(savedOrder.orderNumber);
+      
+      // Close checkout modal and show confirmation
+      setShowCheckoutModal(false);
+      setTimeout(() => {
+        setShowConfirmationModal(true);
+        clearCart();
+      }, 500);
+    } catch (error) {
+      console.error('Order placement error:', error);
+      alert(error.message || 'Failed to place order. Please try again.');
+    }
   };
   
   // Validate form before submission
