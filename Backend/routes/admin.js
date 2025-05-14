@@ -80,6 +80,22 @@ router.put('/orders/:id/status', [auth, adminAuth], async (req, res) => {
   }
 });
 
+// Delete user (admin only)
+router.delete('/users/:id', [auth, adminAuth], async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json({ message: 'User deleted successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // Get dashboard stats (admin only)
 router.get('/dashboard', [auth, adminAuth], async (req, res) => {
   try {

@@ -129,16 +129,6 @@ const Home = () => {
       }
     }
   };
-
-  const renderStars = (rating) => {
-    return Array(5).fill(0).map((_, index) => (
-      <i
-        key={index}
-        className={`fas fa-star ${index < Math.round(rating || 0) ? 'filled' : ''}`}
-        style={{ color: index < Math.round(rating || 0) ? '#ffd700' : '#ddd', fontSize: '0.8rem' }}
-      />
-    ));
-  };
   
   // State for game details modal
   const [selectedGame, setSelectedGame] = useState(null);

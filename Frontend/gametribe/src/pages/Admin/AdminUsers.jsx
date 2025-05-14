@@ -45,6 +45,18 @@ const AdminUsers = () => {
     }
   };
 
+  // New function to handle user deletion
+  const deleteUser = async (userId) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      try {
+        await adminService.deleteUser(userId);
+        setUsers(users.filter(user => user._id !== userId));
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
+    }
+  };
+
   const filteredUsers = users.filter(user =>
     user.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -79,7 +91,7 @@ const AdminUsers = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Admin</th>
-                <th>Active</th>
+                <th>Delete User</th>
                 <th>Member Since</th>
                 <th>Orders</th>
               </tr>
@@ -113,16 +125,20 @@ const AdminUsers = () => {
                     </label>
                   </td>
                   <td>
-                    <label className="toggle-switch">
-                      <input
-                        type="checkbox"
-                        checked={user.isActive !== false}
-                        onChange={(e) => updateUserStatus(user._id, { 
-                          isActive: e.target.checked 
-                        })}
-                      />
-                      <span className="toggle-slider"></span>
-                    </label>
+                    <button 
+                      className="btn-delete"
+                      onClick={() => deleteUser(user._id)}
+                      style={{
+                        backgroundColor: '#f44336',
+                        color: 'white',
+                        border: 'none',
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Delete
+                    </button>
                   </td>
                   <td>{new Date(user.memberSince || user.createdAt).toLocaleDateString()}</td>
                   <td>{user.orders?.length || 0}</td>

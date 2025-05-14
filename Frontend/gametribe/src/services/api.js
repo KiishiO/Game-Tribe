@@ -71,6 +71,10 @@ export const adminService = {
   updateOrderStatus: async (orderId, status) => {
     const response = await api.put(`/api/admin/orders/${orderId}/status`, { status });
     return response.data;
+  },
+  deleteUser: async (userId) => {
+    const response = await api.delete(`/api/admin/users/${userId}`);
+    return response.data;
   }
 };
 
