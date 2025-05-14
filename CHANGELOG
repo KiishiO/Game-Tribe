@@ -13,87 +13,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Core Features
-- **User Authentication System**
+User Authentication System
   - User registration with email and password
   - Secure login/logout functionality
   - JWT token-based authentication
   - Password hashing with bcrypt
 
-- **Game Catalog**
+Game Catalog
   - Home page with game grid display
   - Featured games carousel
   - Game details modal
   - Genre-based categorization
 
-- **Shopping Cart**
+Shopping Cart
   - Add/remove items from cart
   - Quantity adjustment
   - Cart persistence in localStorage
   - Real-time total calculation with tax
 
-- **Checkout System**
+Checkout System
   - Shipping information form
   - Order summary
   - Order confirmation modal
   - Order number generation
 
-- **User Profile**
+User Profile
   - Customizable avatar (8 options)
   - Personal information display
   - Editable personal note
   - Member statistics
 
 ### Community Features
-- **Favorites System**
+Favorites System
   - Add/remove games from favorites
   - Quick favorite toggle on game cards
   - Favorites display in profile
   - Heart icon visual feedback
 
 ### Admin Features
-- **Admin Dashboard**
+Admin Dashboard
   - Total users, orders, games statistics
   - Revenue tracking
   - Recent orders display
   - Quick navigation to admin sections
 
-- **User Management**
+User Management
   - View all users
   - Search users by name/email
   - Toggle admin privileges
   - Delete user accounts
   - View user order counts
 
-- **Order Management**
+Order Management
   - View all orders
   - Filter by status
   - Update order status
   - View detailed order information
   - Color-coded status badges
 
-- **Game Management**
-  - Add new games
-  - Edit existing games
-  - Delete games
-  - Genre selection
-  - Price management
-
 ### Technical Features
-- **Frontend Architecture**
+Frontend Architecture
   - React 18 with functional components
   - React Router v6 for navigation
   - Context API for state management
   - Centralized API service
   - Responsive design
 
-- **Backend Architecture**
+Backend Architecture
   - Express.js REST API
   - MongoDB with Mongoose ODM
   - JWT middleware for auth
   - Admin authorization middleware
   - CORS configuration
 
-- **Security**
+Security
   - Protected routes
   - Input validation
   - Error handling
