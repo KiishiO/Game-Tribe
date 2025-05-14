@@ -93,10 +93,11 @@ node scripts/createAdmin.js
 
 ### Default admin credentials:
 
-Email: admin@gametribe.com
-Password: admin123
+- Email: admin@gametribe.com
+- Password: admin123
 
 📁 Project Structure
+
 MN_5/
 ├── Frontend/gametribe/
 │   ├── public/
@@ -173,16 +174,16 @@ Search is case-sensitive
  Mobile app development
 
 👥 Team
-Developer 1 - fuchicay@iastate.edu
-Developer 2 - iaosomo@iastate.edu
+- Developer 1 - fuchicay@iastate.edu
+- Developer 2 - iaosomo@iastate.edu
 
 🙏 Acknowledgments
 
-Iowa State University SE/COM S 3190 Course
-Bootstrap for UI components
-Font Awesome for icons
-MongoDB documentation
-React documentation
+- Iowa State University SE/COM S 3190 Course
+- Bootstrap for UI components
+- Font Awesome for icons
+- MongoDB documentation
+- React documentation
 
 📞 Support
 For support, email fuchicay@iastate.edu, iaosomo@iastate.edu or create an issue in the repository.
