@@ -96,7 +96,7 @@ node scripts/createAdmin.js
 - Email: admin@gametribe.com
 - Password: admin123
 
-📁 Project Structure
+### 📁 Project Structure
 
 MN_5/
 ├── Frontend/gametribe/
@@ -125,7 +125,7 @@ User: Authentication, profile, favorites
 Game: Product info, reviews, ratings
 Order: Purchase records with items and shipping info
 
-🎮 Usage
+### 🎮 Usage
 ## For Users
 Register for an account or login
 Browse games on the home page
@@ -146,32 +146,32 @@ Add/edit/delete games from catalog
 
 📱 Responsive Design
 The application is fully responsive and works on:
-Desktop (1200px+)
-Tablet (768px - 1199px)
+Desktop (1200px+),
+Tablet (768px - 1199px),
 Mobile (320px - 767px)
 
 🔒 Security Features
-JWT token authentication
-Password hashing with bcrypt
-Protected admin routes
-Input validation
-CORS configuration
-Environment variables for sensitive data
+- JWT token authentication
+- Password hashing with bcrypt
+- Protected admin routes
+- Input validation
+- CORS configuration
+- Environment variables for sensitive data
 
 🐛 Known Issues
-Image upload for games is currently filename-based only
-Payment gateway integration pending
-Email notifications not implemented
-Search is case-sensitive
+- Image upload for games is currently filename-based only
+- Payment gateway integration pending
+- Email notifications not implemented
+- Search is case-sensitive
 
 📈 Future Enhancements
- Real payment gateway integration
- Email notifications for orders
- Advanced recommendation system
- Wishlist feature
- Game screenshots gallery
- User messaging system
- Mobile app development
+ - Real payment gateway integration
+ - Email notifications for orders
+ - Advanced recommendation system
+ - Wishlist feature
+ - Game screenshots gallery
+ - User messaging system
+ - Mobile app development
 
 👥 Team
 - Developer 1 - fuchicay@iastate.edu
