@@ -125,8 +125,8 @@ User: Authentication, profile, favorites
 Game: Product info, reviews, ratings
 Order: Purchase records with items and shipping info
 
-### 🎮 Usage
-## For Users
+## 🎮 Usage
+### For Users
 Register for an account or login
 Browse games on the home page
 Search and filter games by genre or price
@@ -136,7 +136,7 @@ Leave reviews and ratings
 Save favorite games
 View order history in profile
 
-## For Admins
+### For Admins
 Login with admin credentials
 Access admin panel via sidebar
 View platform statistics on dashboard
