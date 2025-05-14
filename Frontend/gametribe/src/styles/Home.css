@@ -170,6 +170,77 @@ body {
     border-bottom-right-radius: 15px;
 }
 
+/* Card with favorite button */
+.card-image-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+  
+  .favorite-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+  }
+  
+  .favorite-btn.active {
+    background-color: var(--accent-color);
+  }
+  
+  .favorite-btn i {
+    font-size: 20px;
+    color: #ccc;
+    transition: color 0.3s ease;
+  }
+  
+  .favorite-btn:hover i {
+    color: #ff6b6b;
+  }
+  
+  .favorite-btn.active i {
+    color: white;
+  }
+  
+  .favorite-btn i.filled {
+    color: white;
+  }
+  
+  /* Card rating display */
+  .card-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 8px 0;
+  }
+  
+  .card-rating span {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-left: 5px;
+  }
+  
+  .card-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 8px 0;
+  }
+
 /* Additional responsive adjustments */
 @media (max-width: 992px) {
     .bungee-shade-regular {

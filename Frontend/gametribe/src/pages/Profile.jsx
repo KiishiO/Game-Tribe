@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { userService } from '../services/api';
 import '../styles/Profile.css';
 
 const Profile = () => {
@@ -17,6 +18,7 @@ const Profile = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [favoriteGames, setFavoriteGames] = useState([]);
   
   // Array of profile images to choose from
   const profileImages = [
@@ -72,8 +74,31 @@ const Profile = () => {
       };
       
       loadOrders();
+
+      const loadFavorites = async () => {
+        try {
+          const favorites = await userService.getFavorites();
+          setFavoriteGames(favorites);
+        } catch (error) {
+          console.error('Error loading favorites:', error);
+          setFavoriteGames([]);
+        }
+      };
+      
+      loadFavorites();
     }
   }, [currentUser, getUserOrders]);
+
+  const removeFavorite = async (gameId) => {
+    try {
+      await userService.removeFromFavorites(gameId);
+      // Reload favorites from server
+      const favorites = await userService.getFavorites();
+      setFavoriteGames(favorites);
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+    }
+  };
   
   // Get current accent color based on profile image
   const getCurrentAccentColor = () => {
@@ -295,11 +320,6 @@ const Profile = () => {
                   />
                 )}
               </div>
-
-              <div className="detail-section">
-                <h3>Games Owned</h3>
-                <p>{currentUser.gamesOwned || 0} games</p>
-              </div>
               
               <div className="detail-section">
                 <h3>Email</h3>
@@ -309,18 +329,44 @@ const Profile = () => {
 
             {/* Favorites Tab */}
             <div className={`tab-content ${activeTab === 'activity' ? 'active' : ''}`} id="activityTab">
-              {currentUser.favoriteGames && currentUser.favoriteGames.length > 0 ? (
-                <div className="favorite-games">
-                  {/* Favorite games would be listed here */}
-                  <p>You have {currentUser.favoriteGames.length} favorite games</p>
+              {favoriteGames && favoriteGames.length > 0 ? (
+                <div className="catalog-container">
+                  {favoriteGames.map(game => (
+                    <div key={game._id || game.id} className="card">
+                      <div className="card-image-container">
+                        <img 
+                          src={`/assets/images/${game.image}`} 
+                          alt={game.name}
+                          className="card-image"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '/assets/myotherimages/GameTribe_Logo.png';
+                          }}
+                        />
+                      </div>
+                      <div className="card-content">
+                        <h4 className="card-title">{game.name}</h4>
+                        <div className="card-price">${(game.price || 0).toFixed(2)}</div>
+                        <button 
+                          className="btn btn-primary mt-3"
+                          onClick={() => removeFavorite(game.id || game._id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="coming-soon">
-                  <p>You haven't added any favorite games yet</p>
+                  <p>You haven't added any favorite games yet.</p>
+                  <Link to="/home" className="btn btn-primary mt-3">
+                    Browse Games
+                  </Link>
                 </div>
               )}
             </div>
-            
+
             {/* Orders Tab */}
             <div className={`tab-content ${activeTab === 'orders' ? 'active' : ''}`} id="ordersTab">
               {renderOrdersTab()}

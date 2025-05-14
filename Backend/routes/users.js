@@ -1,6 +1,8 @@
+// Backend/routes/users.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Game = require('../models/Game');
 const auth = require('../middleware/auth');
 const bcrypt = require('bcryptjs');
 
@@ -92,28 +94,49 @@ router.put('/password', auth, async (req, res) => {
 // @access  Private
 router.post('/favorite/:id', auth, async (req, res) => {
   try {
+    const gameId = req.params.id;
+    
+    // Find user
     const user = await User.findById(req.user.id);
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     
+    // Check if game exists
+    let game;
+    
+    // First try to find by numeric ID if it's a number
+    if (!isNaN(gameId)) {
+      game = await Game.findOne({ id: parseInt(gameId) });
+    } else {
+      // If it's not a number, check if it's a valid ObjectId format
+      if (gameId.match(/^[0-9a-fA-F]{24}$/)) {
+        game = await Game.findById(gameId);
+      }
+    }
+    
+    if (!game) {
+      return res.status(404).json({ message: 'Game not found' });
+    }
+    
     // Check if game is already in favorites
-    if (user.favoriteGames.includes(req.params.id)) {
+    if (user.favoriteGames.includes(game._id)) {
       return res.status(400).json({ message: 'Game already in favorites' });
     }
     
-    // Add game to favorites
-    user.favoriteGames.push(req.params.id);
+    // Add game to favorites (use MongoDB _id)
+    user.favoriteGames.push(game._id);
     await user.save();
     
     res.json(user.favoriteGames);
   } catch (err) {
-    console.error(err.message);
-    if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Game not found' });
-    }
-    res.status(500).send('Server Error');
+    console.error('Add favorite error:', err.message);
+    res.status(500).json({ 
+      message: 'Server Error', 
+      error: err.message,
+      gameId: req.params.id 
+    });
   }
 });
 
@@ -122,14 +145,34 @@ router.post('/favorite/:id', auth, async (req, res) => {
 // @access  Private
 router.delete('/favorite/:id', auth, async (req, res) => {
   try {
+    const gameId = req.params.id;
+    
+    // Find user
     const user = await User.findById(req.user.id);
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     
+    // Find the game to get its MongoDB _id
+    let game;
+    
+    // First try to find by numeric ID if it's a number
+    if (!isNaN(gameId)) {
+      game = await Game.findOne({ id: parseInt(gameId) });
+    } else {
+      // If it's not a number, check if it's a valid ObjectId format
+      if (gameId.match(/^[0-9a-fA-F]{24}$/)) {
+        game = await Game.findById(gameId);
+      }
+    }
+    
+    if (!game) {
+      return res.status(404).json({ message: 'Game not found' });
+    }
+    
     // Check if game is in favorites
-    const index = user.favoriteGames.indexOf(req.params.id);
+    const index = user.favoriteGames.indexOf(game._id);
     if (index === -1) {
       return res.status(400).json({ message: 'Game not in favorites' });
     }
@@ -140,10 +183,74 @@ router.delete('/favorite/:id', auth, async (req, res) => {
     
     res.json(user.favoriteGames);
   } catch (err) {
-    console.error(err.message);
-    if (err.kind === 'ObjectId') {
+    console.error('Remove favorite error:', err.message);
+    res.status(500).json({ 
+      message: 'Server Error',
+      error: err.message,
+      gameId: req.params.id 
+    });
+  }
+});
+
+// @route   GET api/users/favorites
+// @desc    Get user's favorite games
+// @access  Private
+router.get('/favorites', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+      .populate('favoriteGames')
+      .select('favoriteGames');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json(user.favoriteGames || []);
+  } catch (err) {
+    console.error('Get favorites error:', err.message);
+    res.status(500).json({ 
+      message: 'Server Error',
+      error: err.message 
+    });
+  }
+});
+
+// @route   GET api/users/favorite/:id
+// @desc    Check if a game is in favorites
+// @access  Private
+router.get('/favorite/:id', auth, async (req, res) => {
+  try {
+    const gameId = req.params.id;
+    
+    // Find user
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Find the game to get its MongoDB _id
+    let game;
+    // First try to find by numeric ID
+    if (!isNaN(gameId)) {
+      game = await Game.findOne({ id: parseInt(gameId) });
+    }
+    
+    // If not found, try MongoDB _id
+    if (!game) {
+      game = await Game.findById(gameId);
+    }
+    
+    if (!game) {
       return res.status(404).json({ message: 'Game not found' });
     }
+    
+    // Check if game is in favorites
+    const isFavorite = user.favoriteGames.includes(game._id);
+    
+    res.json({ isFavorite });
+  } catch (err) {
+    console.error(err.message);
     res.status(500).send('Server Error');
   }
 });

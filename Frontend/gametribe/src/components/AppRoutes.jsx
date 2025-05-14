@@ -9,6 +9,8 @@ import Cart from "../pages/Cart";
 import Profile from "../pages/Profile";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import Team from "../pages/Team";
+import NotFoundPage from "../pages/NotFound";
 
 //Import admin pages too
 import AdminDashboard from "../pages/Admin/AdminDashboard";
@@ -19,9 +21,7 @@ import AdminOrders from "../pages/Admin/AdminOrders";
 import MainLayout from "./MainLayout";
 import AuthLayout from "./AuthLayout";
 
-// Placeholder components for other pages
-const Team = () => <div className="placeholder-page">Team Page</div>;
-const Future = () => <div className="placeholder-page">Future Page</div>;
+
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -100,20 +100,13 @@ const AppRoutes = () => {
           </MainLayout>
         }
       />
-      <Route
-        path="/future"
-        element={
-          <MainLayout>
-            <Future />
-          </MainLayout>
-        }
-      />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<AdminUsers />} />
       <Route path="/admin/orders" element={<AdminOrders />} />
 
       {/* Redirect unknown routes to home */}
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<MainLayout> <NotFoundPage /> </MainLayout>} />
+      {/* <Route path="/" element={<MainLayout> <Home /> </MainLayout>}/> */}
     </Routes>
   );
 };

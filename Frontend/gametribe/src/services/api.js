@@ -140,6 +140,11 @@ export const userService = {
   removeFromFavorites: async (gameId) => {
     const response = await api.delete(`/api/users/favorite/${gameId}`);
     return response.data;
+  },
+  
+  getFavorites: async () => {
+    const response = await api.get('/api/users/favorites');
+    return response.data;
   }
 };
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { userService } from '../services/api';
 import '../styles/Home.css';
 
 // Import the game data directly
@@ -9,9 +11,21 @@ import gameData from '../data.json';
 const Home = () => {
   const [games, setGames] = useState([]);
   const { addToCart, addToRecentlyViewed } = useCart();
+  const [favoriteGames, setFavoriteGames] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isAuthenticated, currentUser } = useAuth();
+  const navigate = useNavigate();
   
+  const fetchUserFavorites = async () => {
+    try {
+      const favorites = await userService.getFavorites();
+      setFavoriteGames(new Set(favorites.map(game => game._id || game.id)));
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    }
+  };
+
   useEffect(() => {
     // Attempt to load game data
     const fetchGames = async () => {
@@ -72,6 +86,59 @@ const Home = () => {
       }
     }
   }, []);
+
+  // Fetch user's favorite games
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      fetchUserFavorites();
+    } else {
+      setFavoriteGames(new Set());
+    }
+  }, [isAuthenticated, currentUser]);
+
+  const handleToggleFavorite = async (game, e) => {
+    e.stopPropagation(); // Prevent card click
+    
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    
+    // Use the numeric id from the game object, not _id
+    const gameId = game.id || game._id;
+    
+    try {
+      if (favoriteGames.has(gameId)) {
+        await userService.removeFromFavorites(gameId);
+        const newSet = new Set(favoriteGames);
+        newSet.delete(gameId);
+        setFavoriteGames(newSet);
+      } else {
+        await userService.addToFavorites(gameId);
+        const newSet = new Set(favoriteGames);
+        newSet.add(gameId);
+        setFavoriteGames(newSet);
+      }
+      // Refresh favorites to sync with server
+      await fetchUserFavorites();
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      // Show user-friendly error
+      if (error.response && error.response.status === 400) {
+        await fetchUserFavorites();
+      }
+    }
+  };
+
+  const renderStars = (rating) => {
+    return Array(5).fill(0).map((_, index) => (
+      <i
+        key={index}
+        className={`fas fa-star ${index < Math.round(rating || 0) ? 'filled' : ''}`}
+        style={{ color: index < Math.round(rating || 0) ? '#ffd700' : '#ddd', fontSize: '0.8rem' }}
+      />
+    ));
+  };
   
   // State for game details modal
   const [selectedGame, setSelectedGame] = useState(null);
@@ -171,36 +238,51 @@ const Home = () => {
           {/* Game Catalog */}
           <div className="catalog-container">
             {games && games.length > 0 ? (
-              games.map((game) => (
-                <div className="card" key={game.id}>
-                  <img 
-                    src={`/assets/images/${game.image}`} 
-                    alt={game.name} 
-                    className="card-image"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/assets/myotherimages/GameTribe_Logo.png';
-                    }} 
-                  />
-                  <div className="card-content">
-                    <h3 className="card-title">{game.name}</h3>
-                    <div className="card-details">
-                      <span>Genre: {game.genres && game.genres.map((genre, index) => (
-                        <span 
-                          key={index}
-                          className={`badge bg-${getBadgeColor(genre)}-subtle border border-${getBadgeColor(genre)}-subtle text-${getBadgeColor(genre)}-emphasis rounded-pill me-1`}>
-                          {genre}
+              games.map((game) => {
+                const gameId = game._id || game.id;
+                const isFavorite = favoriteGames.has(gameId);
+                
+                return (
+                  <div className="card" key={gameId}>
+                    <div className="card-image-container">
+                      <img 
+                        src={`/assets/images/${game.image}`} 
+                        alt={game.name} 
+                        className="card-image"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/assets/myotherimages/GameTribe_Logo.png';
+                        }} 
+                      />
+                      <button 
+                        className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+                        onClick={(e) => handleToggleFavorite(game, e)}
+                        title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                      >
+                        <i className={`fas fa-heart ${isFavorite ? 'filled' : ''}`}></i>
+                      </button>
+                    </div>
+                    <div className="card-content">
+                      <h3 className="card-title">{game.name}</h3>
+                      <div className="card-price">${(game.price || 0).toFixed(2)}</div>
+                      <div className="card-details">
+                        <span>Genre: {game.genres && game.genres.map((genre, index) => (
+                          <span 
+                            key={index}
+                            className={`badge bg-${getBadgeColor(genre)}-subtle border border-${getBadgeColor(genre)}-subtle text-${getBadgeColor(genre)}-emphasis rounded-pill me-1`}>
+                            {genre}
+                          </span>
+                        ))}
                         </span>
-                      ))}
-                      </span>
+                      </div>
+                    </div>
+                    <div className="card-actions">
+                      <button onClick={() => openGameDetails(game)} className="btn btn-primary">Details</button>
+                      <button onClick={() => addToCart(game)} className="btn btn-secondary">Add to Cart</button>
                     </div>
                   </div>
-                  <div className="card-actions">
-                    <button onClick={() => openGameDetails(game)} className="btn btn-primary">Details</button>
-                    <button onClick={() => addToCart(game)} className="btn btn-secondary">Add to Cart</button>
-                  </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="col-12 text-center">
                 <p>No games found. Please check your connection or try again later.</p>

@@ -130,7 +130,7 @@ const AdminOrders = () => {
 
         {/* Order Details Modal */}
         {selectedOrder && (
-          <div className="modal-overlay" onClick={() => setSelectedOrder(null)}>
+          <div className="modal show d-block" tabIndex="-1" style={{backgroundColor: 'rgba(0,0,0,0.5)'}} onClick={() => setSelectedOrder(null)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <h2>Order Details</h2>
               <div className="order-details">
@@ -165,7 +165,6 @@ const AdminOrders = () => {
                 className="btn-close"
                 onClick={() => setSelectedOrder(null)}
               >
-                Close
               </button>
             </div>
           </div>
