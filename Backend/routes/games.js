@@ -21,7 +21,18 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
   try {
-    const game = await Game.findById(req.params.id);
+    const gameId = req.params.id;
+    let game;
+    
+    // First try to find by numeric ID if it's a number
+    if (!isNaN(gameId)) {
+      game = await Game.findOne({ id: parseInt(gameId) });
+    } else {
+      // If it's not a number, check if it's a valid ObjectId format
+      if (gameId.match(/^[0-9a-fA-F]{24}$/)) {
+        game = await Game.findById(gameId);
+      }
+    }
     
     if (!game) {
       return res.status(404).json({ message: 'Game not found' });
@@ -30,9 +41,6 @@ router.get('/:id', async (req, res) => {
     res.json(game);
   } catch (err) {
     console.error(err.message);
-    if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Game not found' });
-    }
     res.status(500).send('Server Error');
   }
 });

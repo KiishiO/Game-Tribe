@@ -288,7 +288,7 @@
   }
   
   .modal-content {
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-sidebar);
     padding: 30px;
     border-radius: 10px;
     max-width: 600px;

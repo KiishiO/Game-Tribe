@@ -56,12 +56,6 @@ const Sidebar = () => {
           </Link>
         </div>
         
-        <div className="sidebar-nav-item">
-          <Link to="/future" title="Future Updates">
-            <i className="fas fa-rocket"></i>
-          </Link>
-        </div>
-        
         {/* Add Admin link for admin users */}
         {isAuthenticated && currentUser?.isAdmin && (
           <div className="sidebar-nav-item">

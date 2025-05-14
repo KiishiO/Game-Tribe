@@ -294,10 +294,10 @@
 }
 
 /* Checkout modal input styles */
-.modal-body .form-control {
-  background-color: var(--bg-sidebar);
+.modal-body .form-control .form-control#zip {
+  background-color: var(--text-primary);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
+  color: black;
 }
 
 .modal-body .form-control:focus {
@@ -306,13 +306,13 @@
 }
 
 .modal-body .form-label {
-  color: var(--text-primary);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-bottom: 5px;
 }
 
 .modal-body .form-check-input {
-  background-color: var(--bg-sidebar);
+  background-color: var(--text-primary);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -322,7 +322,7 @@
 }
 
 .modal-body .form-check-label {
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }
 
 /* Button styles */

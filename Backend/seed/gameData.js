@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const gameData = [
   {
+    id: 1,
     name: "Haunted",
     image: "Haunted.jpg",
     genres: ["Horror", "Strategy"],
@@ -13,6 +14,7 @@ const gameData = [
     isPopular: false
   },
   {
+    id: 2,
     name: "Imposters",
     image: "Imposters.gif",
     genres: ["Multi-player", "Strategy"],
@@ -22,6 +24,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 3,
     name: "Soos & The Real Girl",
     image: "Soos & The Real Girl.gif",
     genres: ["Adventure", "Role-Playing"],
@@ -31,6 +34,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 4,
     name: "Super Mario Land Adventures",
     image: "Super Mario Land Adv_.gif",
     genres: ["Adventure", "Puzzle"],
@@ -40,6 +44,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 5,
     name: "Battle Ninja",
     image: "BattleBros.jpg",
     genres: ["Action", "Strategy"],
@@ -49,6 +54,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 6,
     name: "Day in The Life",
     image: "Day in the Life.jpg",
     genres: ["Role-Playing", "Puzzle"],
@@ -58,6 +64,7 @@ const gameData = [
     isPopular: false
   },
   {
+    id: 7,
     name: "PowerPuff Girls: Heroic Havoc",
     image: "PowerPuff Girls.jpg",
     genres: ["Action", "Strategy"],
@@ -67,6 +74,7 @@ const gameData = [
     isPopular: false
   },
   {
+    id: 8,
     name: "Adventures with Kirby",
     image: "Adventures with Kirby.gif",
     genres: ["Action", "Adventure", "Role-Playing", "Puzzle"],
@@ -76,6 +84,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 9,
     name: "Sweet Bunny Bakery Express",
     image: "RabbitRestuarantTycoon.gif",
     genres: ["Simulation", "Strategy"],
@@ -85,6 +94,7 @@ const gameData = [
     isPopular: false
   },
   {
+    id: 10,
     name: "Bubble World",
     image: "Bubble World.jpg",
     genres: ["Adventure", "Puzzle"],
@@ -94,6 +104,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 11,
     name: "CyberPunk: Redacted",
     image: "CyberPunk (The Remake).gif",
     genres: ["Action", "Role-Playing"],
@@ -103,6 +114,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 12,
     name: "Omniscient Reader: Rewritten Fate",
     image: "Omnicient Reader POV_The Game.gif",
     genres: ["Action", "Role-Playing", "Simulation", "Strategy"],
@@ -112,6 +124,7 @@ const gameData = [
     isPopular: true
   },
   {
+    id: 13,
     name: "Tiana's Place",
     image: "Tiana's Place.gif",
     genres: ["Role-Playing", "Simulation"],
@@ -121,6 +134,7 @@ const gameData = [
     isPopular: false
   },
   {
+    id: 14,
     name: "Spy X Family: Invaders",
     image: "Spy x family_Invaders.jpg",
     genres: ["Adventure", "Strategy"],
@@ -130,6 +144,7 @@ const gameData = [
     isPopular: false
   },
   {
+    id: 15,
     name: "Penguin Run: A Studio Ghibli Game",
     image: "Studio Ghibli's Penguin Run.gif",
     genres: ["Adventure"],
@@ -139,6 +154,7 @@ const gameData = [
     isPopular: false
   },
   {
+    id: 16,
     name: "Take-Off",
     image: "Take-Off.gif",
     genres: ["Simulation"],
