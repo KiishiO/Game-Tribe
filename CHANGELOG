@@ -1,0 +1,150 @@
+## CHANGELOG.md
+
+```markdown
+# Changelog
+
+All notable changes to the Game Tribe project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] - 2025-05-14
+
+### Added
+
+#### Core Features
+- **User Authentication System**
+  - User registration with email and password
+  - Secure login/logout functionality
+  - JWT token-based authentication
+  - Password hashing with bcrypt
+
+- **Game Catalog**
+  - Home page with game grid display
+  - Featured games carousel
+  - Game details modal
+  - Genre-based categorization
+
+- **Shopping Cart**
+  - Add/remove items from cart
+  - Quantity adjustment
+  - Cart persistence in localStorage
+  - Real-time total calculation with tax
+
+- **Checkout System**
+  - Shipping information form
+  - Order summary
+  - Order confirmation modal
+  - Order number generation
+
+- **User Profile**
+  - Customizable avatar (8 options)
+  - Personal information display
+  - Editable personal note
+  - Member statistics
+
+### Community Features
+- **Favorites System**
+  - Add/remove games from favorites
+  - Quick favorite toggle on game cards
+  - Favorites display in profile
+  - Heart icon visual feedback
+
+### Admin Features
+- **Admin Dashboard**
+  - Total users, orders, games statistics
+  - Revenue tracking
+  - Recent orders display
+  - Quick navigation to admin sections
+
+- **User Management**
+  - View all users
+  - Search users by name/email
+  - Toggle admin privileges
+  - Delete user accounts
+  - View user order counts
+
+- **Order Management**
+  - View all orders
+  - Filter by status
+  - Update order status
+  - View detailed order information
+  - Color-coded status badges
+
+- **Game Management**
+  - Add new games
+  - Edit existing games
+  - Delete games
+  - Genre selection
+  - Price management
+
+### Technical Features
+- **Frontend Architecture**
+  - React 18 with functional components
+  - React Router v6 for navigation
+  - Context API for state management
+  - Centralized API service
+  - Responsive design
+
+- **Backend Architecture**
+  - Express.js REST API
+  - MongoDB with Mongoose ODM
+  - JWT middleware for auth
+  - Admin authorization middleware
+  - CORS configuration
+
+- **Security**
+  - Protected routes
+  - Input validation
+  - Error handling
+  - Environment variables
+  - Secure password storage
+
+### UI/UX Features
+- Custom CSS with CSS variables
+- Bootstrap 5 integration
+- Font Awesome icons
+- Loading states
+- Error messages
+- Hover effects and transitions
+- Mobile-responsive design
+
+### Development Tools
+- ESLint configuration
+- Proxy setup for development
+- Admin creation script
+- Folder structure organization
+
+### Fixed
+- Authentication redirect loops
+- MongoDB population issues
+- Order status update bugs
+- Image fallback handling
+- Cart persistence issues
+
+### Security
+- Added JWT token expiration
+- Implemented admin route protection
+- Added input sanitization
+- Secured API endpoints
+- Environment variable usage
+
+### Added
+- Initial project setup
+- Basic authentication flow
+- Game catalog implementation
+- Shopping cart functionality
+- User profile pages
+---
+
+## Future Releases 
+
+### [1.1.0] - TBD
+- Payment gateway integration
+- Email notifications
+- Advanced search filters
+- User messaging system
+- Social login options
+- Game recommendations
+- Wishlist feature
+- Performance optimizations
