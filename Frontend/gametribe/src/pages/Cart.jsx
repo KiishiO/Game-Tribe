@@ -77,40 +77,6 @@ const Cart = () => {
     setShowLoginPrompt(false);
     navigate('/login');
   };
-  
-  // // Handle place order
-  // const handlePlaceOrder = () => {
-  //   // Basic form validation
-  //   if (!validateForm()) {
-  //     return;
-  //   }
-    
-  //   // Create new order object
-  //   const order = {
-  //     orderNumber: `GT-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
-  //     items: [...cartItems],
-  //     subtotal,
-  //     tax,
-  //     total,
-  //     shippingInfo: { ...shippingInfo },
-  //     paymentMethod: paymentInfo.method,
-  //     date: new Date().toISOString()
-  //   };
-    
-  //   // Save order to context
-  //   addOrder(order);
-    
-  //   // Set order details for confirmation
-  //   setOrderDetails(order);
-  //   setOrderNumber(order.orderNumber);
-    
-  //   // Close checkout modal and show confirmation
-  //   setShowCheckoutModal(false);
-  //   setTimeout(() => {
-  //     setShowConfirmationModal(true);
-  //     clearCart();
-  //   }, 500);
-  // };
 
   // Handle place order
   const handlePlaceOrder = async () => {
