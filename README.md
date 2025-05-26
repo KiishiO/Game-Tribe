@@ -174,8 +174,8 @@ Mobile (320px - 767px)
  - Mobile app development
 
 👥 Team
-- Developer 1 - fuchicay@iastate.edu
-- Developer 2 - iaosomo@iastate.edu
+- Developer 1 - Fuchi
+- Developer 2 - Kiishi
 
 🙏 Acknowledgments
 
@@ -184,8 +184,5 @@ Mobile (320px - 767px)
 - Font Awesome for icons
 - MongoDB documentation
 - React documentation
-
-📞 Support
-For support, email fuchicay@iastate.edu, iaosomo@iastate.edu or create an issue in the repository.
 
 Last updated: May 2025
