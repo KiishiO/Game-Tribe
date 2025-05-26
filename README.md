@@ -98,7 +98,7 @@ node scripts/createAdmin.js
 
 ### 📁 Project Structure
 
-MN_5/
+Game Tribe/
 ├── Frontend/gametribe/<br>
 │   ├── public/<br>
 │   │   └── assets/<br>
