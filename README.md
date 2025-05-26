@@ -99,25 +99,25 @@ node scripts/createAdmin.js
 ### 📁 Project Structure
 
 MN_5/
-├── Frontend/gametribe/
-│   ├── public/
-│   │   └── assets/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── styles/
-│   └── package.json
-├── Backend/
-│   ├── models/
-│   ├── routes/
-│   ├── middleware/
-│   ├── scripts/
-│   ├── server.js
-│   └── package.json
-└── Documents/
-    └── data.json
+├── Frontend/gametribe/<br>
+│   ├── public/<br>
+│   │   └── assets/<br>
+│   ├── src/<br>
+│   │   ├── components/<br>
+│   │   ├── context/<br>
+│   │   ├── pages/<br>
+│   │   ├── services/<br>
+│   │   └── styles/<br>
+│   └── package.json<br>
+├── Backend/<br>
+│   ├── models/<br>
+│   ├── routes/<br>
+│   ├── middleware/<br>
+│   ├── scripts/<br>
+│   ├── server.js<br>
+│   └── package.json<br>
+└── Documents/<br>
+    └── data.json<br>
 
 
 ## Database Models
