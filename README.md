@@ -23,6 +23,12 @@ A full-stack e-commerce gaming platform with community features built using the 
 - **Favorites**: Quick access to saved games
 - **Recently Viewed**: Track browsing history
 
+### 📸 Demo Screenshots
+![img1](https://github.com/user-attachments/assets/c603025c-5d7f-4dcf-a625-df0e6886cbb5)
+![img2](https://github.com/user-attachments/assets/0ab7fe50-4057-4858-a314-cf845f422dde)
+![img 3](https://github.com/user-attachments/assets/fa256d93-356b-4cfb-991c-e1dcc43fb1ba)
+![img4](https://github.com/user-attachments/assets/8df7ddce-96d7-4b74-976f-745f48784c6b)
+
 ## 🛠️ Tech Stack
 
 ### Frontend
